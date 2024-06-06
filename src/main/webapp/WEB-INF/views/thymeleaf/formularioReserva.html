@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reserva de Locker</title>
+</head>
+<body>
+<h1>Formulario de Reserva</h1>
+<form th:action="@{/reserva}" th:object="${reservaDatos}" method="post">
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}" required />
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" th:field="*{password}" required />
+    </div>
+    <div>
+        <label for="idLocker">ID de Locker:</label>
+        <input type="number" id="idLocker" th:field="*{idLocker}" required />
+    </div>
+    <div>
+        <button type="submit">Registrar Reserva</button>
+    </div>
+</form>
+</body>
+</html>

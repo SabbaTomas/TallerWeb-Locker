@@ -1,11 +1,15 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.locker.Haversine;
 import com.tallerwebi.dominio.locker.RepositorioDatosLocker;
 import com.tallerwebi.dominio.locker.TipoLocker;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -23,23 +27,7 @@ public class RepositorioDatosLockerImpl implements RepositorioDatosLocker {
     }
 
     @Override
-    public Locker actualizar(Locker locker) {
-        Session session = sessionFactory.getCurrentSession();
-        session.update(locker);
-        return locker;
-    }
-
-    @Override
-    public void eliminar(Long idLocker) {
-        Session session = sessionFactory.getCurrentSession();
-        Locker locker = session.get(Locker.class, idLocker);
-        if (locker != null) {
-            session.delete(locker);
-        }
-    }
-
-    @Override
-    public Locker obtenerPorId(Long idLocker) {
+    public Locker obtenerLockerPorId(Long idLocker) {
         return (Locker) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM Locker WHERE id = :id")
                 .setParameter("id", idLocker)
@@ -67,13 +55,50 @@ public class RepositorioDatosLockerImpl implements RepositorioDatosLocker {
     }
 
     @Override
+    public void actualizar(Long idLocker, TipoLocker tipoLocker) {
+        this.sessionFactory.getCurrentSession()
+                .createQuery("UPDATE Locker SET tipo = :tipoLocker WHERE id = :idLocker")
+                .setParameter("tipoLocker", tipoLocker)
+                .setParameter("idLocker", idLocker)
+                .executeUpdate();
+    }
+
+    @Override
+    public void eliminar(Long idLocker) {
+        boolean seleccionado = false;
+        this.sessionFactory.getCurrentSession()
+                .createQuery("UPDATE Locker SET seleccionado = :seleccionado WHERE id = :idLocker")
+                .setParameter("idLocker", idLocker)
+                .setParameter("seleccionado", seleccionado)
+                .executeUpdate();
+    }
+
+
+    @Override
     public List<Locker> obtenerLockersPorCodigoPostal(String codigoPostal) {
-        String hql = "FROM Locker WHERE codigo_postal = :codigo_postal";
+        String hql = "FROM Locker WHERE codigo_postal = :codigo_postal AND seleccionado = true";
         return sessionFactory.getCurrentSession().createQuery(hql, Locker.class)
                 .setParameter("codigo_postal", codigoPostal)
                 .list();
     }
 
+    @Override
+    public List<Locker> encontrarLockersPorCercania(double latitude, double longitude, double maxDistance) {
+        double rangoLat = maxDistance / 111.0;
+        double rangoLon = maxDistance / (111.0 * Math.cos(Math.toRadians(latitude)));
+
+        List<Locker> lockersEnRango = obtenerLockersPorRangoDeCoordenadas(latitude - rangoLat, latitude + rangoLat, longitude - rangoLon, longitude + rangoLon);
+        List<Locker> lockersCercanos = new ArrayList<>();
+
+        for (Locker locker : lockersEnRango) {
+            double distancia = Haversine.distance(latitude, longitude, locker.getLatitud(), locker.getLongitud());
+            if (distancia < maxDistance) {
+                lockersCercanos.add(locker);
+            }
+        }
+
+        return lockersCercanos;
+    }
 
     @Override
     public List<Locker> obtenerLockersPorRangoDeCoordenadas(double latMin, double latMax, double lonMin, double lonMax) {
@@ -85,6 +110,8 @@ public class RepositorioDatosLockerImpl implements RepositorioDatosLocker {
                 .setParameter("lonMax", lonMax)
                 .getResultList();
     }
+
+
 }
 /*
 $places = Places::where([

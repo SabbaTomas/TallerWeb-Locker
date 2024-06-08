@@ -17,6 +17,8 @@ public class Locker {
     private boolean seleccionado;
     private Double latitud;
     private Double longitud;
+    private double distancia;
+
 
     private String codigo_postal;
 
@@ -97,5 +99,13 @@ public class Locker {
 
     public void setCodigo_postal(String codigo_postal) {
         this.codigo_postal = codigo_postal;
+    }
+
+    public double getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
     }
 }

@@ -9,11 +9,11 @@ public interface RepositorioDatosLocker  {
 
     void guardar(Locker locker);
 
-    Locker actualizar(Locker locker);
+    void  actualizar(Long idLocker, TipoLocker tipoLocker);
 
     void eliminar(Long idLocker);
 
-    Locker obtenerPorId(Long idLocker);
+    Locker obtenerLockerPorId(Long idLocker);
 
 
     List<Locker> obtenerLockersPorTipo(TipoLocker tipoLocker);
@@ -25,4 +25,8 @@ public interface RepositorioDatosLocker  {
     List<Locker> obtenerLockersPorCodigoPostal(String codigoPostal);
 
     List<Locker> obtenerLockersPorRangoDeCoordenadas(double v, double v1, double v2, double v3);
+
+    List<Locker> encontrarLockersPorCercania(double latitude, double longitude, double maxDistance);
+
+
 }

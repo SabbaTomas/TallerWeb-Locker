@@ -8,7 +8,7 @@ public interface ServicioLocker {
 
 
 
-    public void crearLocker(Locker locker);
+    void crearLocker(Locker locker);
     void actualizarLocker(Long idLocker, TipoLocker tipoLocker);
     void eliminarLocker(Long idLocker);
     public void eliminarTodos();

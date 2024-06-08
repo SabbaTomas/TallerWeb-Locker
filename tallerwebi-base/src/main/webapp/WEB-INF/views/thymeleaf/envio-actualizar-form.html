@@ -4,11 +4,13 @@
     <title>Actualizar Locker</title>
 </head>
 <body>
-<form action="/lockers/actualizar-locker" method="post">
-    <input type="hidden" name="idLocker" value="1">
+<h1>Actualizar Locker</h1>
+<form th:action="@{/actualizar-locker}" method="post">
+    <label for="idLocker">ID del Locker:</label>
+    <input type="text" id="idLocker" name="idLocker" required>
     <label for="tipoLocker">Tipo de Locker:</label>
-    <select name="tipoLocker" id="tipoLocker">
-        <option value="PEQUEÑO">Pequeño</option>
+    <select id="tipoLocker" name="tipoLocker" required>
+        <option value="PEQUENIO">Pequeño</option>
         <option value="MEDIANO">Mediano</option>
         <option value="GRANDE">Grande</option>
     </select>

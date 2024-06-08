@@ -1,5 +1,8 @@
 package com.tallerwebi.dominio;
 
+import com.tallerwebi.dominio.excepcion.LockerNoEncontrado;
+import com.tallerwebi.dominio.excepcion.ParametrosDelLockerInvalidos;
+import com.tallerwebi.dominio.locker.Haversine;
 import com.tallerwebi.dominio.locker.ServicioLocker;
 import com.tallerwebi.dominio.locker.TipoLocker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,32 +24,34 @@ public class ServicioLockerImpl implements ServicioLocker {
     @Transactional
     public void crearLocker(Locker locker) {
         if (locker == null || locker.getTipo() == null || locker.getLatitud() == null || locker.getLongitud() == null || locker.getCodigo_postal() == null) {
-            throw new IllegalArgumentException("Locker no puede tener parámetros nulos");
+            throw new ParametrosDelLockerInvalidos("Locker no puede tener parámetros nulos");
         }
         lockerRepository.guardar(locker);
     }
 
     @Override
+    @Transactional
     public void actualizarLocker(Long idLocker, TipoLocker tipoLocker) {
         if (idLocker == null || idLocker <= 0) {
-            throw new IllegalArgumentException("No se encontró ningún locker con el ID proporcionado: " + idLocker);
+            throw new LockerNoEncontrado("No se encontró ningún locker con el ID proporcionado: " + idLocker);
         }
         if (tipoLocker == null) {
-            throw new IllegalArgumentException("Tipo de locker no puede ser nulo");
+            throw new ParametrosDelLockerInvalidos("Tipo de locker no puede ser nulo");
         }
-        Locker locker = lockerRepository.obtenerPorId(idLocker);
+        Locker locker = lockerRepository.obtenerLockerPorId(idLocker);
         if (locker != null) {
             locker.setTipo(tipoLocker);
-            lockerRepository.actualizar(locker);
+            lockerRepository.actualizar(idLocker, tipoLocker);
         } else {
-            throw new IllegalArgumentException("No se encontró ningún locker con el ID proporcionado: " + idLocker);
+            throw new LockerNoEncontrado("No se encontró ningún locker con el ID proporcionado: " + idLocker);
         }
     }
 
     @Override
+    @Transactional
     public void eliminarLocker(Long idLocker) {
         if (idLocker == null || idLocker <= 0) {
-            throw new IllegalArgumentException("ID de locker inválido");
+            throw new ParametrosDelLockerInvalidos("ID de locker inválido");
         }
         lockerRepository.eliminar(idLocker);
     }
@@ -54,41 +59,37 @@ public class ServicioLockerImpl implements ServicioLocker {
     @Override
     public List<Locker> obtenerLockersPorTipo(TipoLocker tipoLocker) {
         if (tipoLocker == null) {
-            throw new IllegalArgumentException("Tipo de locker no puede ser nulo");
+            throw new ParametrosDelLockerInvalidos("Tipo de locker no puede ser nulo");
         }
         return lockerRepository.obtenerLockersPorTipo(tipoLocker);
     }
 
     public Locker obtenerLockerPorId(Long idLocker) {
         if (idLocker == null || idLocker <= 0) {
-            throw new IllegalArgumentException("ID de locker inválido");
+            throw new ParametrosDelLockerInvalidos("ID de locker inválido");
         }
-        return lockerRepository.obtenerPorId(idLocker);
+        return lockerRepository.obtenerLockerPorId(idLocker);
+    }
+
+    @Transactional
+    public List<Locker> obtenerLockersCercanos(double latitud, double longitud, double radio) {
+        return lockerRepository.encontrarLockersPorCercania(latitud, longitud, radio);
     }
 
     @Transactional
     public List<Locker> obtenerLockersPorCodigoPostal(String codigoPostal) {
-        if (codigoPostal == null || codigoPostal.isEmpty()) {
-            throw new IllegalArgumentException("Código postal no puede ser nulo o vacío");
+
+        if (codigoPostal == null || codigoPostal.isEmpty() ) {
+            throw new ParametrosDelLockerInvalidos("Código postal no puede ser nulo o vacío");
         }
         return lockerRepository.obtenerLockersPorCodigoPostal(codigoPostal);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Locker> obtenerLockersSeleccionados() {
         return lockerRepository.obtenerSeleccionados();
     }
 
-    @Transactional
-    public void eliminarTodos() {
-        lockerRepository.eliminarTodos();
-    }
-
-    public List<Locker> obtenerLockersCercanos(double latitud, double longitud, double radio) {
-        double rangoLat = radio / 111.0;
-        double rangoLon = radio / (111.0 * Math.cos(Math.toRadians(latitud)));
-        return lockerRepository.obtenerLockersPorRangoDeCoordenadas(latitud - rangoLat, latitud + rangoLat, longitud - rangoLon, longitud + rangoLon);
-    }
 
     @Transactional
     public List<Locker> buscarLockers(String codigoPostal, Double latitud, Double longitud, Double radio) {
@@ -104,10 +105,25 @@ public class ServicioLockerImpl implements ServicioLocker {
 
         if (lockers == null || lockers.isEmpty()) {
             lockers = new ArrayList<>();
+        } else {
+            if (latitud != null && longitud != null) {
+                for (Locker locker : lockers) {
+                    double distancia = Haversine.distance(latitud, longitud, locker.getLatitud(), locker.getLongitud());
+                    locker.setDistancia(distancia); // Asume que la clase Locker tiene un campo de distancia
+                }
+            }
         }
 
         return lockers;
     }
+
+
+
+    @Transactional
+    public void eliminarTodos() {
+        lockerRepository.eliminarTodos();
+    }
+
 
 
 }

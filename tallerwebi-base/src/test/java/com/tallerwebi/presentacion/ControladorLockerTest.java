@@ -44,7 +44,7 @@ public class ControladorLockerTest {
     @Test
     public void queSePuedaCrearUnNuevoLocker() {
         // Preparación
-        TipoLocker tipoLocker = TipoLocker.PEQUEÑO;
+        TipoLocker tipoLocker = TipoLocker.PEQUENIO;
         List<Locker> lockers = new ArrayList<>();
         when(servicioLocker.obtenerLockersPorTipo(tipoLocker)).thenReturn(lockers);
 
@@ -66,7 +66,7 @@ public class ControladorLockerTest {
         ModelAndView mav = controladorLocker.actualizarLocker(idLocker, tipoLocker);
 
         // Verificación
-        assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/lockers/actualizar-locker"));
+        assertThat(mav.getViewName(), equalToIgnoringCase("envio-actualizar"));
         verify(servicioLocker).actualizarLocker(idLocker, tipoLocker);
     }
 
@@ -79,7 +79,7 @@ public class ControladorLockerTest {
         ModelAndView mav = controladorLocker.eliminarLocker(idLocker);
 
         // Verificación
-        assertThat(mav.getViewName(), equalToIgnoringCase("redirect:/lockers/mensaje-eliminacion-locker"));
+        assertThat(mav.getViewName(), equalToIgnoringCase("envio-eliminar"));
         verify(servicioLocker).eliminarLocker(idLocker);
     }
 
@@ -102,7 +102,7 @@ public class ControladorLockerTest {
     public void queSeMuestrenLockersSeleccionados() {
         // Preparación
         List<Locker> lockers = Arrays.asList(
-                new Locker(TipoLocker.PEQUEÑO, 40.7128, -74.0060, "1704"),
+                new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, "1704"),
                 new Locker(TipoLocker.MEDIANO, 40.7129, -74.0061, "1704")
         );
         when(servicioLocker.obtenerLockersSeleccionados()).thenReturn(lockers);
@@ -120,7 +120,7 @@ public class ControladorLockerTest {
         // Preparación
         String codigoPostal = "1704";
         List<Locker> lockers = Arrays.asList(
-                new Locker(TipoLocker.PEQUEÑO, 40.7128, -74.0060, codigoPostal),
+                new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, codigoPostal),
                 new Locker(TipoLocker.MEDIANO, 40.7129, -74.0061, codigoPostal)
         );
         when(servicioLocker.buscarLockers(eq(codigoPostal), isNull(), isNull(), anyDouble())).thenReturn(lockers);
@@ -157,7 +157,7 @@ public class ControladorLockerTest {
         Double latitud = -34.6821;
         Double longitud = -58.5638;
         List<Locker> lockers = Arrays.asList(
-                new Locker(TipoLocker.PEQUEÑO, latitud, longitud, "1704"),
+                new Locker(TipoLocker.PEQUENIO, latitud, longitud, "1704"),
                 new Locker(TipoLocker.MEDIANO, latitud + 0.001, longitud - 0.001, "1704")
         );
         when(servicioLocker.buscarLockers(isNull(), eq(latitud), eq(longitud), anyDouble())).thenReturn(lockers);
@@ -174,7 +174,7 @@ public class ControladorLockerTest {
     public void buscarLockers_SinParametros_DevuelveLockersSeleccionados() {
         // Preparación
         List<Locker> lockersSeleccionados = Arrays.asList(
-                new Locker(TipoLocker.PEQUEÑO, 40.7128, -74.0060, "1704"),
+                new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, "1704"),
                 new Locker(TipoLocker.MEDIANO, 40.7129, -74.0061, "1704")
         );
         when(servicioLocker.buscarLockers(isNull(), isNull(), isNull(), anyDouble())).thenReturn(Collections.emptyList());
@@ -193,7 +193,7 @@ public class ControladorLockerTest {
         // Preparación
         String codigoPostal = "1234";
         List<Locker> lockersSeleccionados = Arrays.asList(
-                new Locker(TipoLocker.PEQUEÑO, 40.7128, -74.0060, codigoPostal),
+                new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, codigoPostal),
                 new Locker(TipoLocker.MEDIANO, 40.7129, -74.0061, codigoPostal)
         );
         when(servicioLocker.buscarLockers(eq(codigoPostal), isNull(), isNull(), anyDouble())).thenReturn(Collections.emptyList());
@@ -215,7 +215,7 @@ public class ControladorLockerTest {
         Double latitud = -34.6821;
         Double longitud = -58.5638;
         List<Locker> lockers = Arrays.asList(
-                new Locker(TipoLocker.PEQUEÑO, latitud, longitud, codigoPostal),
+                new Locker(TipoLocker.PEQUENIO, latitud, longitud, codigoPostal),
                 new Locker(TipoLocker.MEDIANO, latitud + 0.001, longitud - 0.001, codigoPostal)
         );
         when(servicioLocker.buscarLockers(eq(codigoPostal), eq(latitud), eq(longitud), anyDouble())).thenReturn(lockers);

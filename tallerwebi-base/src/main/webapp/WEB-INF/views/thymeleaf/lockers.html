@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lockers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #filterForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #filterForm label {
+            margin-bottom: 10px;
+        }
+        #filterForm input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            width: 200px;
+        }
+        #filterForm button {
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #filterForm button:hover {
+            background-color: #0056b3;
+        }
+        #filterForm .geolocation-button {
+            margin-top: 10px;
+        }
+        #container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+            position: relative;
+        }
+        #map {
+            height: 500px;
+            width: 70%;
+            margin-right: 20px;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        .alternatives {
+            width: 30%;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .alternatives p {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .alternatives ul {
+            list-style: none;
+            padding: 0;
+        }
+        .alternatives li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .alternatives li:hover {
+            background-color: #0056b3;
+        }
+        #distanceDisplay {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #007BFF;
+        }
+        #reserveButton {
+            padding: 20px 40px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            left: 90%;
+            transform: translateX(-50%);
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            font-size: 18px;
+        }
+        #reserveButton:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<h1>Select a Locker</h1>
+<form id="filterForm" th:action="@{/search}" method="get">
+    <label for="codigoPostal">Ingrese su código postal:</label>
+    <input type="text" id="codigoPostal" name="codigoPostal">
+    <button type="submit">Buscar Lockers</button>
+    <button type="button" class="geolocation-button" onclick="obtenerUbicacion()">Usar mi ubicación actual</button>
+    <div id="errorMessage" class="error-message" style="display: none;">Código postal inválido.</div>
+</form>
+<div id="container">
+    <div id="map"></div>
+    <div class="alternatives">
+        <p id="mensajeAlternativos"></p>
+        <ul id="alternativosLista"></ul>
+    </div>
+</div>
+<div id="distanceDisplay"></div>
+<button id="reserveButton" onclick="reservarLocker()">Reservar</button>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var lockers = /*[[${lockers}]]*/ [];
+    var center = /*[[${center}]]*/ [-34.6821, -58.5638]; // Centro predeterminado
+    var zoom = /*[[${zoom}]]*/ 12; // Nivel de zoom predeterminado
+    var mostrarAlternativos = /*[[${mostrarAlternativos}]]*/ false;
+    var mensajeAlternativos = /*[[${mensajeAlternativos}]]*/ "No hay lockers disponibles en tu área, aquí hay algunas alternativas.";
+    /*]]>*/
+</script>
+
+<script>
+    var map;
+    var markers = [];
+    var currentInfoWindow = null;
+    var directionsService;
+    var directionsRenderer;
+    var geolocalizado = false;
+    var usuarioUbicacion = null;
+    var destinoSeleccionado = null;
+    var usuarioMarker = null;
+    var lockerMarker = null;
+
+    function initMap() {
+        var mapCenter = {lat: center[0], lng: center[1]};
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: zoom,
+            center: mapCenter
+        });
+
+        directionsService = new google.maps.DirectionsService();
+        directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
+        directionsRenderer.setMap(map);
+
+        var lockerIcon = {
+            url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+            scaledSize: new google.maps.Size(50, 50)
+        };
+
+        lockers.forEach(function(locker) {
+            var marker = new google.maps.Marker({
+                position: {lat: locker.latitud, lng: locker.longitud},
+                map: map,
+                title: locker.descripcion + ' - ' + locker.tipo,
+                icon: lockerIcon
+            });
+            markers.push(marker);
+
+            var infoWindow = new google.maps.InfoWindow({
+                content: `<h3>${locker.descripcion}</h3>
+                          <p>Tipo: ${locker.tipo}</p>
+                          <p>Código Postal: ${locker.codigo_postal}</p>
+                          <p>Lat: ${locker.latitud}, Lon: ${locker.longitud}</p>
+                          <button onclick="mostrarBotonReserva()">Reservar</button>`
+            });
+
+            marker.addListener('click', function() {
+                destinoSeleccionado = {lat: locker.latitud, lng: locker.longitud};
+                if (!geolocalizado) {
+                    alert("Debes permitir el acceso a tu ubicación para calcular la distancia.");
+                    return;
+                }
+                if (currentInfoWindow) {
+                    currentInfoWindow.close();
+                }
+                infoWindow.open(map, marker);
+                currentInfoWindow = infoWindow;
+                calcularRuta(marker.getPosition());
+            });
+        });
+
+        if (mostrarAlternativos) {
+            document.getElementById('mensajeAlternativos').innerText = mensajeAlternativos;
+            var listaAlternativos = document.getElementById('alternativosLista');
+            lockers.forEach(function(locker) {
+                var li = document.createElement('li');
+                li.innerText = `${locker.descripcion} - ${locker.tipo} - ${locker.codigo_postal}`;
+                li.onclick = function() {
+                    destinoSeleccionado = {lat: locker.latitud, lng: locker.longitud};
+                    if (!geolocalizado) {
+                        alert("Debes permitir el acceso a tu ubicación para calcular la distancia.");
+                        return;
+                    }
+                    centrarMapa(locker.latitud, locker.longitud);
+                    calcularRuta({lat: locker.latitud, lng: locker.longitud});
+                };
+                listaAlternativos.appendChild(li);
+            });
+        }
+
+        cargarUbicacionUsuario();
+    }
+
+    function centrarMapa(lat, lng) {
+        map.setCenter({lat: lat, lng: lng});
+        map.setZoom(15);
+    }
+
+    function obtenerUbicacion() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                usuarioUbicacion = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                geolocalizado = true;
+                sessionStorage.setItem('lat', usuarioUbicacion.lat);
+                sessionStorage.setItem('lng', usuarioUbicacion.lng);
+                centrarMapa(usuarioUbicacion.lat, usuarioUbicacion.lng);
+                agregarMarcadorUsuario(usuarioUbicacion.lat, usuarioUbicacion.lng);
+                mostrarLockersCercanos();
+                actualizarURLConUbicacion(usuarioUbicacion.lat, usuarioUbicacion.lng);
+            }, function(error) {
+                alert("Debes permitir el acceso a tu ubicación para calcular la distancia.");
+            });
+        } else {
+            alert("La geolocalización no es compatible con este navegador.");
+        }
+    }
+
+    function cargarUbicacionUsuario() {
+        var lat = sessionStorage.getItem('lat');
+        var lng = sessionStorage.getItem('lng');
+        if (lat && lng) {
+            usuarioUbicacion = {
+                lat: parseFloat(lat),
+                lng: parseFloat(lng)
+            };
+            geolocalizado = true;
+            centrarMapa(usuarioUbicacion.lat, usuarioUbicacion.lng);
+            agregarMarcadorUsuario(usuarioUbicacion.lat, usuarioUbicacion.lng);
+            mostrarLockersCercanos();
+        }
+    }
+
+    function agregarMarcadorUsuario(lat, lng) {
+        if (usuarioMarker) {
+            usuarioMarker.setMap(null); // Eliminar marcador existente
+        }
+        var userIcon = {
+            url: 'https://maps.google.com/mapfiles/kml/shapes/man.png',
+            scaledSize: new google.maps.Size(32, 32)
+        };
+        usuarioMarker = new google.maps.Marker({
+            position: {lat: lat, lng: lng},
+            map: map,
+            icon: userIcon,
+            title: 'Tu ubicación'
+        });
+    }
+
+    function mostrarLockersCercanos() {
+        if (usuarioUbicacion) {
+            var bounds = new google.maps.LatLngBounds();
+            bounds.extend(usuarioUbicacion);
+
+            markers.forEach(function(marker) {
+                bounds.extend(marker.getPosition());
+            });
+
+            map.fitBounds(bounds);
+        }
+    }
+
+    function actualizarURLConUbicacion(lat, lng) {
+        var nuevaURL = new URL(window.location);
+        nuevaURL.searchParams.set('lat', lat);
+        nuevaURL.searchParams.set('lng', lng);
+        window.history.pushState({}, '', nuevaURL);
+    }
+
+    function calcularRuta(destino) {
+        if (usuarioUbicacion) {
+            var request = {
+                origin: usuarioUbicacion,
+                destination: destino,
+                travelMode: 'DRIVING'
+            };
+
+            directionsService.route(request, function(result, status) {
+                if (status == 'OK') {
+                    directionsRenderer.setDirections(result);
+                    var ruta = result.routes[0].overview_path;
+                    var distancia = result.routes[0].legs[0].distance.value;
+                    var distanciaTexto = result.routes[0].legs[0].distance.text;
+                    var cuadras = Math.round(distancia / 100);
+                    mostrarDistanciaEnMapa(distanciaTexto, cuadras);
+
+                    if (usuarioMarker) {
+                        usuarioMarker.setMap(null);
+                    }
+                    if (lockerMarker) {
+                        lockerMarker.setMap(null);
+                    }
+                    usuarioMarker = new google.maps.Marker({
+                        position: ruta[0],
+                        map: map,
+                        icon: {
+                            url: 'https://maps.google.com/mapfiles/kml/shapes/man.png',
+                            scaledSize: new google.maps.Size(32, 32)
+                        },
+                        title: 'Tu ubicación'
+                    });
+                    lockerMarker = new google.maps.Marker({
+                        position: ruta[ruta.length - 1],
+                        map: map,
+                        icon: {
+                            url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                            scaledSize: new google.maps.Size(50, 50)
+                        },
+                        title: 'Locker'
+                    });
+                }
+            });
+        }
+    }
+
+    function mostrarDistanciaEnMapa(distanciaTexto, cuadras) {
+        var distanceDiv = document.getElementById('distanceDisplay');
+        distanceDiv.innerHTML = `Distancia: ${distanciaTexto} (${cuadras} cuadras)`;
+    }
+
+    function mostrarBotonReserva() {
+        document.getElementById('reserveButton').style.display = 'block';
+    }
+
+    function reservarLocker() {
+        alert("Locker reservado!");
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDO-cs-AzjPpidbANQOQr9bWXK1mw0I9Ww&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    });
+</script>
+</body>
+</html>

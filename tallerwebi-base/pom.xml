@@ -20,16 +20,12 @@
         <hibernate.version>5.4.24.Final</hibernate.version>
         <playwright.version>1.36.0</playwright.version>
         <hsqldb.version>2.3.2</hsqldb.version>
-<<<<<<< HEAD
         <mysql.version>8.0.33</mysql.version>
-=======
->>>>>>> Maxi-2
     </properties>
 
     <dependencies>
 
         <dependency>
-<<<<<<< HEAD
             <groupId>com.google.maps</groupId>
             <artifactId>google-maps-services</artifactId>
             <version>0.10.0</version>
@@ -47,8 +43,6 @@
         </dependency>
 
         <dependency>
-=======
->>>>>>> Maxi-2
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
@@ -73,7 +67,6 @@
         </dependency>
 
         <dependency>
-<<<<<<< HEAD
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>2.5.5</version>
@@ -81,8 +74,6 @@
 
 
         <dependency>
-=======
->>>>>>> Maxi-2
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf-spring5</artifactId>
             <version>${thymeleaf.spring.version}</version>
@@ -141,7 +132,6 @@
             <version>${playwright.version}</version>
             <scope>test</scope>
         </dependency>
-<<<<<<< HEAD
 
 <!--        Conector para MySql-->
         <dependency>
@@ -163,8 +153,6 @@
             <scope>test</scope>
         </dependency>
 
-=======
->>>>>>> Maxi-2
         <!-- compile only, deployed container will provide this -->
         <!--
         <dependency>
@@ -222,7 +210,7 @@
                         <port>8080</port>
                     </httpConnector>
                     <webApp>
-                        <contextPath>/spring</contextPath>
+                        <contextPath>/lockers</contextPath>
                     </webApp>
                 </configuration>
             </plugin>

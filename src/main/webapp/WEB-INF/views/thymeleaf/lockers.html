@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lockers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #filterForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #filterForm label {
+            margin-bottom: 10px;
+        }
+        #filterForm input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            width: 200px;
+        }
+        #filterForm button {
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #filterForm button:hover {
+            background-color: #0056b3;
+        }
+        #filterForm .geolocation-button {
+            margin-top: 10px;
+        }
+        #container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+        #map {
+            height: 500px;
+            width: 70%;
+            margin-right: 20px;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        .alternatives {
+            width: 30%;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .alternatives p {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .alternatives ul {
+            list-style: none;
+            padding: 0;
+        }
+        .alternatives li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .alternatives li:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>Select a Locker</h1>
+<form id="filterForm" th:action="@{/lockers/search}" method="get">
+    <label for="codigoPostal">Ingrese su código postal:</label>
+    <input type="text" id="codigoPostal" name="codigoPostal">
+    <button type="submit">Buscar Lockers</button>
+    <button type="button" class="geolocation-button" onclick="obtenerUbicacion()">Usar mi ubicación actual</button>
+    <div id="errorMessage" class="error-message" style="display: none;">Código postal inválido.</div>
+</form>
+<div id="container">
+    <div id="map"></div>
+    <div class="alternatives" th:if="${mostrarAlternativos}">
+        <p>No tenemos lockers cerca de ti, pero te ofrecemos estos lockers:</p>
+        <ul>
+            <li th:each="locker : ${lockers}"
+                th:onclick="'centrarMapa(' + ${locker.latitud} + ',' + ${locker.longitud} + ')'"
+                th:text="${locker.descripcion + ' - ' + locker.tipo + ' - ' + locker.codigo_postal}"></li>
+        </ul>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var lockers = /*[[${lockers}]]*/ [];
+    var center = /*[[${center}]]*/ [-34.6821, -58.5638]; // Centro predeterminado
+    var zoom = /*[[${zoom}]]*/ 12; // Nivel de zoom predeterminado
+    var mostrarAlternativos = /*[[${mostrarAlternativos}]]*/ false;
+    /*]]>*/
+</script>
+
+<script>
+    var map;
+    var markers = [];
+    var currentInfoWindow = null;
+
+    function initMap() {
+        var mapCenter = {lat: center[0], lng: center[1]};
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: zoom,
+            center: mapCenter
+        });
+
+        lockers.forEach(function(locker) {
+            var marker = new google.maps.Marker({
+                position: {lat: locker.latitud, lng: locker.longitud},
+                map: map,
+                title: locker.descripcion + ' - ' + locker.tipo
+            });
+            markers.push(marker);
+
+            var infoWindow = new google.maps.InfoWindow({
+                content: `<h3>${locker.descripcion}</h3>
+                          <p>Tipo: ${locker.tipo}</p>
+                          <p>Código Postal: ${locker.codigo_postal}</p>
+                          <p>Lat: ${locker.latitud}, Lon: ${locker.longitud}</p>`
+            });
+
+            marker.addListener('click', function() {
+                if (currentInfoWindow) {
+                    currentInfoWindow.close();
+                }
+                infoWindow.open(map, marker);
+                currentInfoWindow = infoWindow;
+            });
+        });
+    }
+
+    function obtenerUbicacion() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                window.location.href = `/spring/lockers/search?latitud=${lat}&longitud=${lon}`;
+            }, function(error) {
+                alert("Error al obtener la ubicación: " + error.message);
+            });
+        } else {
+            alert("Geolocalización no soportada por este navegador.");
+        }
+    }
+
+    function centrarMapa(lat, lon) {
+        var position = {lat: lat, lng: lon};
+        map.setCenter(position);
+        map.setZoom(15);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDO-cs-AzjPpidbANQOQr9bWXK1mw0I9Ww&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    });
+</script>
+</body>
+</html>

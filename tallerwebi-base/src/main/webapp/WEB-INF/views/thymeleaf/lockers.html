@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -98,19 +99,15 @@
             color: #007BFF;
         }
         #reserveButton {
-            padding: 20px 40px;
+            padding: 10px 20px;
             background-color: #28a745;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            position: absolute;
-            left: 90%;
-            transform: translateX(-50%);
-            top: 50%;
-            transform: translate(-50%, -50%);
             display: none;
             font-size: 18px;
+            margin-bottom: 20px;
         }
         #reserveButton:hover {
             background-color: #218838;
@@ -129,16 +126,17 @@
 <div id="container">
     <div id="map"></div>
     <div class="alternatives">
+        <button id="reserveButton" onclick="reservarLocker()">Reservar</button>
         <p id="mensajeAlternativos"></p>
         <ul id="alternativosLista"></ul>
     </div>
 </div>
 <div id="distanceDisplay"></div>
-<button id="reserveButton" onclick="reservarLocker()">Reservar</button>
 
 <script th:inline="javascript">
     /*<![CDATA[*/
     var lockers = /*[[${lockers}]]*/ [];
+    var idUsuario = /*[[${idUsuario}]]*/ 0;
     var center = /*[[${center}]]*/ [-34.6821, -58.5638]; // Centro predeterminado
     var zoom = /*[[${zoom}]]*/ 12; // Nivel de zoom predeterminado
     var mostrarAlternativos = /*[[${mostrarAlternativos}]]*/ false;
@@ -156,7 +154,6 @@
     var usuarioUbicacion = null;
     var destinoSeleccionado = null;
     var usuarioMarker = null;
-    var lockerMarker = null;
 
     function initMap() {
         var mapCenter = {lat: center[0], lng: center[1]};
@@ -188,7 +185,8 @@
                           <p>Tipo: ${locker.tipo}</p>
                           <p>Código Postal: ${locker.codigo_postal}</p>
                           <p>Lat: ${locker.latitud}, Lon: ${locker.longitud}</p>
-                          <button onclick="mostrarBotonReserva()">Reservar</button>`
+                          <button onclick="mostrarBotonReserva(${locker.id})">Reservar</button>`
+
             });
 
             marker.addListener('click', function() {
@@ -326,9 +324,6 @@
                     if (usuarioMarker) {
                         usuarioMarker.setMap(null);
                     }
-                    if (lockerMarker) {
-                        lockerMarker.setMap(null);
-                    }
                     usuarioMarker = new google.maps.Marker({
                         position: ruta[0],
                         map: map,
@@ -337,15 +332,6 @@
                             scaledSize: new google.maps.Size(32, 32)
                         },
                         title: 'Tu ubicación'
-                    });
-                    lockerMarker = new google.maps.Marker({
-                        position: ruta[ruta.length - 1],
-                        map: map,
-                        icon: {
-                            url: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-                            scaledSize: new google.maps.Size(50, 50)
-                        },
-                        title: 'Locker'
                     });
                 }
             });
@@ -357,15 +343,28 @@
         distanceDiv.innerHTML = `Distancia: ${distanciaTexto} (${cuadras} cuadras)`;
     }
 
-    function mostrarBotonReserva() {
-        document.getElementById('reserveButton').style.display = 'block';
+    function mostrarBotonReserva(idLocker) {
+        var idUsuario = sessionStorage.getItem('idUsuario'); // Obtener ID del usuario de sessionStorage
+        if (!idUsuario) {
+            alert("No se ha encontrado el ID del usuario.");
+            return;
+        }
+        if (!idLocker) {
+            alert("No se ha encontrado el ID del locker.");
+            return;
+        }
+        window.location.href = '/lockers/reserva/formulario?idUsuario=' + idUsuario + '&idLocker=' + idLocker;
     }
+
+
 
     function reservarLocker() {
         alert("Locker reservado!");
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        sessionStorage.setItem('idUsuario', '1');
+
         var script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDO-cs-AzjPpidbANQOQr9bWXK1mw0I9Ww&callback=initMap`;
         script.async = true;

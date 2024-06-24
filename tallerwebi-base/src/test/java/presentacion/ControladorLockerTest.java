@@ -1,6 +1,8 @@
 package presentacion;
 
 import dominio.Locker;
+import dominio.locker.Haversine;
+import dominio.locker.RepositorioDatosLocker;
 import dominio.locker.ServicioLocker;
 import dominio.locker.TipoLocker;
 import integracion.config.HibernateTestConfig;
@@ -8,13 +10,16 @@ import integracion.config.SpringWebTestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,30 +35,48 @@ import static org.mockito.Mockito.*;
 @ContextConfiguration(classes = {HibernateTestConfig.class, SpringWebTestConfig.class})
 public class ControladorLockerTest {
 
+    @InjectMocks
     private ControladorLocker controladorLocker;
 
     @Mock
     private ServicioLocker servicioLocker;
 
+    @Autowired
+    private RepositorioDatosLocker lockerRepository;
+
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         controladorLocker = new ControladorLocker(servicioLocker);
+
     }
 
     @Test
-    public void queSePuedaCrearUnNuevoLocker() {
-        // Preparación
+    public void queSePuedaCrearUnNuevoLockerYNoDeNulo() {
         TipoLocker tipoLocker = TipoLocker.PEQUENIO;
-        List<Locker> lockers = new ArrayList<>();
-        when(servicioLocker.obtenerLockersPorTipo(tipoLocker)).thenReturn(lockers);
+        Locker locker = new Locker(tipoLocker, -34.605, -58.510, "1704");
+        ModelAndView nuevoLocker = controladorLocker.crearLocker(locker);
+
+        assertNotNull(nuevoLocker, "El nuevo Locker debería ser creado y no nulo");
+    }
+
+    @Test
+    public void queSePuedaCrearUnLockerConValoresEspecificos() {
+        // Preparación
+        TipoLocker tipoLocker = TipoLocker.MEDIANO;
+        Locker locker = new Locker(tipoLocker, -34.605, -58.510, "1704");
+        doNothing().when(servicioLocker).crearLocker(locker);
 
         // Ejecución
-        ModelAndView mav = controladorLocker.crearLocker(tipoLocker);
+        servicioLocker.crearLocker(locker);
 
         // Verificación
-        assertThat(mav.getViewName(), equalToIgnoringCase("crear-locker"));
-        assertThat(mav.getModel().get("lockers"), equalTo(lockers));
+        assertNotNull(locker);
+        assertThat(locker.getTipo(), equalTo(tipoLocker));
+        assertThat(locker.getLatitud(), equalTo(-34.605));
+        assertThat(locker.getLongitud(), equalTo(-58.510));
+        assertThat(locker.getCodigo_postal(), equalTo("1704"));
     }
 
     @Test
@@ -227,4 +250,6 @@ public class ControladorLockerTest {
         assertThat(mav.getViewName(), equalToIgnoringCase("lockers"));
         assertThat(mav.getModel().get("lockers"), equalTo(lockers));
     }
+
+
 }

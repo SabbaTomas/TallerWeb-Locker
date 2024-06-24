@@ -5,10 +5,8 @@ import dominio.excepcion.UsuarioExistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 
 @Service("servicioLogin")
-@Transactional
 public class ServicioLoginImpl implements ServicioLogin {
 
     private RepositorioUsuario repositorioUsuario;
@@ -28,10 +26,12 @@ public class ServicioLoginImpl implements ServicioLogin {
     public void registrar(Usuario usuario) throws UsuarioExistente {
         Usuario usuarioEncontrado = repositorioUsuario.buscarUsuario(usuario.getEmail(), usuario.getPassword());
         if(usuarioEncontrado != null){
-            throw new UsuarioExistente();
+            throw new UsuarioExistente("El usuario ya existe");
         }
         repositorioUsuario.guardar(usuario);
     }
+
+
 
 }
 

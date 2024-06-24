@@ -1,16 +1,17 @@
 package presentacion;
 
 import dominio.Locker;
+import dominio.excepcion.ParametrosDelLockerInvalidos;
 import dominio.locker.ServicioLocker;
 import dominio.locker.TipoLocker;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Controller
@@ -23,23 +24,32 @@ public class ControladorLocker {
         this.servicioLocker = servicioLocker;
     }
 
-
     @Transactional
     @GetMapping("/crear-locker")
-    public ModelAndView crearLocker(@RequestParam("tipoLocker") TipoLocker tipoLocker) {
+    public ModelAndView mostrarFormularioCrearLocker(@RequestParam("tipoLocker") TipoLocker tipoLocker) {
+        ModelAndView mav = new ModelAndView("crear-locker");
+        Locker nuevoLocker = new Locker();
+        nuevoLocker.setTipo(tipoLocker);
+        mav.addObject("nuevoLocker", nuevoLocker);
+        return mav;
+    }
+
+    @Transactional
+    @PostMapping("/crear-locker")
+    public ModelAndView crearLocker(@ModelAttribute Locker nuevoLocker) {
         ModelAndView mav = new ModelAndView();
         try {
-            List<Locker> lockers = servicioLocker.obtenerLockersPorTipo(tipoLocker);
-            mav.setViewName("crear-locker");
-            mav.addObject("lockers", lockers);
+            servicioLocker.crearLocker(nuevoLocker);
+            mav.setViewName("mensaje-creacion");
+            mav.addObject("message", "¡Locker creado exitosamente!");
+            mav.addObject("nuevoLocker", nuevoLocker);
         } catch (Exception e) {
-            mav.setViewName("error");
+            mav.setViewName("crear-locker");
+            mav.addObject("nuevoLocker", nuevoLocker);
             mav.addObject("errorMessage", "Error al crear locker.");
         }
         return mav;
     }
-
-
     @GetMapping("/actualizar-locker")
     public String mostrarFormularioActualizar(Model model) {
         return "envio-actualizar-form";

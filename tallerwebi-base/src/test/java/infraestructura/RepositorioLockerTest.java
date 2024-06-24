@@ -2,7 +2,11 @@ package infraestructura;
 
 import dominio.Locker;
 import dominio.RepositorioDatosLockerImpl;
+import dominio.ServicioLockerImpl;
+import dominio.excepcion.LockerNoEncontrado;
+import dominio.excepcion.ParametrosDelLockerInvalidos;
 import dominio.locker.RepositorioDatosLocker;
+import dominio.locker.ServicioLocker;
 import dominio.locker.TipoLocker;
 import infraestructura.config.HibernateTestInfraestructuraConfig;
 import org.hibernate.SessionFactory;
@@ -20,18 +24,23 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {HibernateTestInfraestructuraConfig.class})public class RepositorioLockerTest {
+@ContextConfiguration(classes = {HibernateTestInfraestructuraConfig.class})
+public class RepositorioLockerTest {
+
 
     @Autowired
     private SessionFactory sessionFactory;
 
     private RepositorioDatosLocker repolocker;
+    private ServicioLocker servicioLocker;
 
     @BeforeEach
     public void init() {
         this.repolocker = new RepositorioDatosLockerImpl(this.sessionFactory);
+        this.servicioLocker = new ServicioLockerImpl((RepositorioDatosLockerImpl) this.repolocker);
     }
 
 
@@ -102,7 +111,7 @@ import static org.junit.jupiter.api.Assertions.*;
         assertDoesNotThrow(() -> repolocker.eliminar(9999L));
     }
 
-    /*
+
     @Test
     @Rollback
     @Transactional
@@ -117,11 +126,15 @@ import static org.junit.jupiter.api.Assertions.*;
         // Ejecución
         repolocker.actualizar(nuevoLocker.getId(), tipoLockerNuevo);
 
+        // **Refresh lockerActualizado to ensure it has the latest data**
+        sessionFactory.getCurrentSession().refresh(nuevoLocker);
+
         // Verificación
         Locker lockerActualizado = repolocker.obtenerLockerPorId(nuevoLocker.getId());
         assertThat(lockerActualizado.getTipo(), equalTo(tipoLockerNuevo));
     }
-*/
+
+
     @Test
     @Rollback
     @Transactional
@@ -149,15 +162,18 @@ import static org.junit.jupiter.api.Assertions.*;
         assertThrows(Exception.class, () -> repolocker.guardar(null));
     }
 
-    /*
     @Test
     @Rollback
     @Transactional
-    public void testActualizarLockerNulo() {
-        // Ejecución y verificación
-        assertThrows(Exception.class, () -> repolocker.actualizar(null, null));
+    public void testActualizarLockerConParametrosNulos() {
+
+        // Verificar que se lanza una excepción cuando idLocker es nulo
+        assertThrows(LockerNoEncontrado.class, () -> servicioLocker.actualizarLocker(null, TipoLocker.PEQUENIO));
+
+        // Verificar que se lanza una excepción cuando tipoLocker es nulo
+        assertThrows(ParametrosDelLockerInvalidos.class, () -> servicioLocker.actualizarLocker(1L, null));
     }
-*/
+
 
     @Test
     @Rollback
@@ -178,7 +194,8 @@ import static org.junit.jupiter.api.Assertions.*;
         assertTrue(lockersSeleccionados.contains(locker1));
         assertTrue(lockersSeleccionados.contains(locker2));
     }
-/*
+
+
     @Test
     @Rollback
     @Transactional
@@ -192,14 +209,20 @@ import static org.junit.jupiter.api.Assertions.*;
         // Ejecución
         repolocker.eliminar(locker1.getId());
 
+        sessionFactory.getCurrentSession().refresh(locker1);
+
         // Verificación
         Locker lockerObtenido1 = repolocker.obtenerLockerPorId(locker1.getId());
         Locker lockerObtenido2 = repolocker.obtenerLockerPorId(locker2.getId());
 
-        assertNull(lockerObtenido1);
-        assertThat(lockerObtenido2, equalTo(locker2));
+        assertNotNull(lockerObtenido1);
+        assertFalse(lockerObtenido1.getSeleccionado());
+
+        assertNotNull(lockerObtenido2);
+        assertTrue(lockerObtenido2.getSeleccionado());
     }
-*/
+
+
     @Test
     @Rollback
     @Transactional
@@ -277,26 +300,6 @@ import static org.junit.jupiter.api.Assertions.*;
         assertThat(lockerActualizado.getCodigo_postal(), equalTo("1234567890"));
     }
 
-    /*
-    @Test
-    @Rollback
-    @Transactional
-    public void testActualizarSeleccionadoLocker() {
-        // Preparación
-        Locker locker = new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, "1704");
-        locker.setSeleccionado(true);
-        repolocker.guardar(locker);
-        Long idPrueba = locker.getId(); // Obtener el ID generado
-
-        // Ejecución
-        repolocker.eliminar(idPrueba); // Este método actualizará el campo seleccionado a false
-
-        // Verificación
-        Locker lockerActualizado = repolocker.obtenerLockerPorId(idPrueba);
-        assertNotNull(lockerActualizado);
-        assertFalse(lockerActualizado.getSeleccionado());
-    }
-*/
 
     @Test
     @Rollback
@@ -347,4 +350,23 @@ import static org.junit.jupiter.api.Assertions.*;
         assertTrue(lockersPorCoordenadas.contains(locker1));
         assertTrue(lockersPorCoordenadas.contains(locker2));
     }
+
+    @Test
+    @Rollback
+    @Transactional
+    public void testEncontrarLockersPorCercania() {
+        // Preparación
+        Locker locker1 = new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, "1704");
+        Locker locker2 = new Locker(TipoLocker.MEDIANO, 40.7129, -74.0061, "1754");
+        repolocker.guardar(locker1);
+        repolocker.guardar(locker2);
+
+        // Ejecución
+        List<Locker> lockersCercanos = repolocker.encontrarLockersPorCercania(40.7128, -74.0060, 1.0);
+
+        // Verificación
+        assertTrue(lockersCercanos.contains(locker1));
+        assertTrue(lockersCercanos.contains(locker2));
+    }
+
 }

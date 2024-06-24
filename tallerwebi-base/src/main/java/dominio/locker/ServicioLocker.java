@@ -11,8 +11,7 @@ public interface ServicioLocker {
     void crearLocker(Locker locker);
     void actualizarLocker(Long idLocker, TipoLocker tipoLocker);
     void eliminarLocker(Long idLocker);
-    public void eliminarTodos();
-
+    void eliminarTodos();
     List<Locker> obtenerLockersPorTipo(TipoLocker tipoLocker);
     Locker obtenerLockerPorId(Long lockerId);
 
@@ -21,6 +20,6 @@ public interface ServicioLocker {
     List<Locker> obtenerLockersPorCodigoPostal(String codigoPostal);
 
     List<Locker> obtenerLockersCercanos(double latitud, double longitud, double radio);
-    public List<Locker> buscarLockers(String codigoPostal, Double latitud, Double longitud, Double radio);
+    List<Locker> buscarLockers(String codigoPostal, Double latitud, Double longitud, Double radio);
 
 }

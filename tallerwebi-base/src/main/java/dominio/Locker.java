@@ -4,6 +4,7 @@ import dominio.locker.TipoLocker;
 
 import javax.persistence.*;
 
+
 @Entity
 public class Locker {
     @Id
@@ -15,8 +16,8 @@ public class Locker {
 
     private String descripcion;
     private boolean seleccionado;
-    private Double latitud;
-    private Double longitud;
+    private double latitud;
+    private double longitud;
     private double distancia;
 
 
@@ -26,8 +27,7 @@ public class Locker {
     public Locker() {
     }
 
-    // Constructor con tipo, latitud y longitud
-    public Locker(TipoLocker tipo, Double latitud, Double longitud, String codigo_postal) {
+    public Locker(TipoLocker tipo, double latitud, double longitud, String codigo_postal) {
         this.tipo = tipo;
         this.latitud = latitud;
         this.longitud = longitud;
@@ -40,10 +40,6 @@ public class Locker {
         this.tipo = tipo;
     }
 
-    public Locker(Long idLocker, TipoLocker tipoLockerNuevo) {
-        this.id = idLocker;
-        this.tipo = tipoLockerNuevo;
-    }
 
     public Long getId() {
         return id;

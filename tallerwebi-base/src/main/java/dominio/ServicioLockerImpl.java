@@ -9,12 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ServicioLockerImpl implements ServicioLocker {
     private final RepositorioDatosLockerImpl lockerRepository;
+
+    private static final Long INITIAL_ID = 7L;
 
     @Autowired
     public ServicioLockerImpl(RepositorioDatosLockerImpl lockerRepository) {
@@ -23,11 +27,46 @@ public class ServicioLockerImpl implements ServicioLocker {
 
     @Transactional
     public void crearLocker(Locker locker) {
-        if (locker == null || locker.getTipo() == null || locker.getLatitud() == null || locker.getLongitud() == null || locker.getCodigo_postal() == null) {
+        if (locker == null || locker.getTipo() == null) {
             throw new ParametrosDelLockerInvalidos("Locker no puede tener parámetros nulos");
         }
+
+        if (locker.getLatitud() == null || locker.getLongitud() == null || locker.getCodigo_postal() == null) {
+            generarValoresAleatoriosParaLocker(locker);
+        }
+
+        if (locker.getDescripcion() == null || locker.getDescripcion().isEmpty()) {
+            locker.setDescripcion("Descripción por defecto");
+        }
+
+        locker.setSeleccionado(true);
+
         lockerRepository.guardar(locker);
     }
+
+
+    private void generarValoresAleatoriosParaLocker(Locker locker) {
+        Random random = new Random();
+
+        double centroLatitud = -34.6500;
+        double centroLongitud = -58.5500;
+        double rangoEnKilometros = 5;
+
+        double latitud;
+        double longitud;
+        do {
+            latitud = centroLatitud + (random.nextDouble() * 2 - 1) * (rangoEnKilometros / 110.574);
+            longitud = centroLongitud + (random.nextDouble() * 2 - 1) * (rangoEnKilometros / (111.320 * Math.cos(Math.toRadians(centroLatitud))));
+        } while (Haversine.distance(centroLatitud, centroLongitud, latitud, longitud) > rangoEnKilometros);
+
+        List<String> codigosPostales = Arrays.asList("1704", "1754", "1706", "1702");
+        String codigoPostal = codigosPostales.get(random.nextInt(codigosPostales.size()));
+
+        locker.setLatitud(latitud);
+        locker.setLongitud(longitud);
+        locker.setCodigo_postal(codigoPostal);
+    }
+
 
     @Override
     @Transactional
@@ -64,11 +103,14 @@ public class ServicioLockerImpl implements ServicioLocker {
         return lockerRepository.obtenerLockersPorTipo(tipoLocker);
     }
 
+    @Override
+    @Transactional
     public Locker obtenerLockerPorId(Long idLocker) {
-        if (idLocker == null || idLocker <= 0) {
-            throw new ParametrosDelLockerInvalidos("ID de locker inválido");
+        Locker locker = lockerRepository.obtenerLockerPorId(idLocker);
+        if (locker == null) {
+            throw new LockerNoEncontrado("Locker no encontrado con ID: " + idLocker);
         }
-        return lockerRepository.obtenerLockerPorId(idLocker);
+        return locker;
     }
 
     @Transactional
@@ -109,14 +151,13 @@ public class ServicioLockerImpl implements ServicioLocker {
             if (latitud != null && longitud != null) {
                 for (Locker locker : lockers) {
                     double distancia = Haversine.distance(latitud, longitud, locker.getLatitud(), locker.getLongitud());
-                    locker.setDistancia(distancia); // Asume que la clase Locker tiene un campo de distancia
+                    locker.setDistancia(distancia);
                 }
             }
         }
 
         return lockers;
     }
-
 
 
     @Transactional

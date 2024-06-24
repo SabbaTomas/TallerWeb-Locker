@@ -18,6 +18,7 @@ public class RepositorioDatosLockerImpl implements RepositorioDatosLocker {
         this.sessionFactory = sessionFactory;
     }
 
+
     @Override
     public void guardar(Locker locker) {
         this.sessionFactory.getCurrentSession().save(locker);
@@ -25,11 +26,16 @@ public class RepositorioDatosLockerImpl implements RepositorioDatosLocker {
 
     @Override
     public Locker obtenerLockerPorId(Long idLocker) {
-        return (Locker) this.sessionFactory.getCurrentSession()
+        Locker locker = (Locker) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM Locker WHERE id = :id")
                 .setParameter("id", idLocker)
                 .uniqueResult();
+        if (locker == null) {
+            throw new IllegalArgumentException("Locker no encontrado");
+        }
+        return locker;
     }
+
 
     @Override
     public List<Locker> obtenerLockersPorTipo(TipoLocker tipoLocker) {

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Seleccionar Locker</title>
+    <link rel="stylesheet" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<h1>Seleccionar Locker</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Tipo</th>
+        <th>Código Postal</th>
+        <th>Acción</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="locker : ${lockers}">
+        <td th:text="${locker.id}"></td>
+        <td th:text="${locker.descripcion}"></td>
+        <td th:text="${locker.tipo}"></td>
+        <td th:text="${locker.codigo_postal}"></td>
+        <td>
+            <a th:href="@{/reserva(idLocker=${locker.id})}">Seleccionar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

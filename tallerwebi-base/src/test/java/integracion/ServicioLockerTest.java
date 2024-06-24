@@ -292,4 +292,7 @@ public class ServicioLockerTest {
         List<Locker> resultado = servicioLocker.buscarLockers(null, null, null, null);
         assertEquals(lockersSeleccionados, resultado);
     }
+
+
+
 }

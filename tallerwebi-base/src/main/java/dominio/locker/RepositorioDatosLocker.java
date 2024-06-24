@@ -15,10 +15,10 @@ public interface RepositorioDatosLocker  {
 
     Locker obtenerLockerPorId(Long idLocker);
 
-
     List<Locker> obtenerLockersPorTipo(TipoLocker tipoLocker);
 
     List<Locker> obtenerSeleccionados();
+
 
     void eliminarTodos();
 

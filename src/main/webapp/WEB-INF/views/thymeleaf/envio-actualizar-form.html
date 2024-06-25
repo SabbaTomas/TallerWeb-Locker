@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Actualizar Locker</title>
+</head>
+<body>
+<h1>Actualizar Locker</h1>
+<form th:action="@{/actualizar-locker}" method="post">
+    <label for="idLocker">ID del Locker:</label>
+    <input type="text" id="idLocker" name="idLocker" required>
+    <label for="tipoLocker">Tipo de Locker:</label>
+    <select id="tipoLocker" name="tipoLocker" required>
+        <option value="PEQUENIO">Pequeño</option>
+        <option value="MEDIANO">Mediano</option>
+        <option value="GRANDE">Grande</option>
+    </select>
+    <button type="submit">Actualizar Locker</button>
+</form>
+</body>
+</html>

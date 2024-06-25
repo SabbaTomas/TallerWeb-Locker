@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mensaje de creación de locker</title>
+    <link rel="stylesheet" th:href="@{/css/mensaje-creacion.css}"/>
+</head>
+<body>
+<h1>¡Locker creado exitosamente!</h1>
+<p>El locker ha sido creado correctamente con los siguientes detalles:</p>
+<ul>
+    <li><strong>ID:</strong> <span th:text="${nuevoLocker.id}"></span></li>
+    <li><strong>Tipo:</strong> <span th:text="${nuevoLocker.tipo}"></span></li>
+    <li><strong>Descripción:</strong> <span th:text="${nuevoLocker.descripcion}"></span></li>
+    <li><strong>Latitud:</strong> <span th:text="${nuevoLocker.latitud}"></span></li>
+    <li><strong>Longitud:</strong> <span th:text="${nuevoLocker.longitud}"></span></li>
+    <li><strong>Código Postal:</strong> <span th:text="${nuevoLocker.codigo_postal}"></span></li>
+    <li><strong>Seleccionado:</strong> <span th:text="${nuevoLocker.seleccionado}"></span></li>
+</ul>
+</body>
+</html>

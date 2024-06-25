@@ -11,3 +11,13 @@ spring:
       ddl-auto: create-drop
     show-sql: true
     database-platform: org.hibernate.dialect.HSQLDialect
+
+logging:
+  level:
+    root: INFO
+    presentacion.ControladorReserva: DEBUG
+
+logging:
+  level:
+    root: INFO
+    presentacion.ControladorReserva: DEBUG

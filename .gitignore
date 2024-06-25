@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.class
 *.DS_Store
 
@@ -18,3 +19,25 @@ hs_err_pid*
 /.classpath
 /.idea/
 /.settings/
+=======
+*.class
+*.DS_Store
+
+/target
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+/.tomcatplugin
+/work/
+.settings/org.eclipse.m2e.core.prefs
+/.classpath
+/.idea/
+/.settings/
+>>>>>>> d0a79c67dedf3a3541efd92e42ec565ecd04edbd

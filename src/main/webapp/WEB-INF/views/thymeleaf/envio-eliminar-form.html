@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Eliminar Locker</title>
+</head>
+<body>
+<h1>Eliminar Locker</h1>
+<form th:action="@{/eliminar-locker}" method="post">
+    <label for="idLocker">ID del Locker:</label>
+    <input type="text" id="idLocker" name="idLocker">
+    <button type="submit">Eliminar Locker</button>
+</form>
+</body>
+</html>

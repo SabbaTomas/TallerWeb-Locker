@@ -2,13 +2,35 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Mensaje de creación de locker</title>
-    <link rel="stylesheet" type="text/css">
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
-
+    <title>Crear Locker</title>
+    <link rel="stylesheet" th:href="@{/css/crearLocker.css}"/>
 </head>
 <body>
-<h1>¡Locker creado exitosamente!</h1>
-<p>El locker ha sido creado correctamente.</p>
+<h1>Crear Locker</h1>
+<form th:action="@{/crear-locker}" th:object="${nuevoLocker}" method="post">
+    <label for="tipo">Tipo de Locker:</label>
+    <select id="tipo" th:field="*{tipo}">
+        <option value="PEQUENO">Pequeño</option>
+        <option value="MEDIANO">Mediano</option>
+        <option value="GRANDE">Grande</option>
+    </select>
+    <br/>
+    <label for="descripcion">Descripción:</label>
+    <input type="text" id="descripcion" th:field="*{descripcion}" placeholder="Descripción"/>
+    <br/>
+    <label for="latitud">Latitud:</label>
+    <input type="text" id="latitud" th:field="*{latitud}" placeholder="Latitud"/>
+    <br/>
+    <label for="longitud">Longitud:</label>
+    <input type="text" id="longitud" th:field="*{longitud}" placeholder="Longitud"/>
+    <br/>
+    <label for="codigo_postal">Código Postal:</label>
+    <input type="text" id="codigo_postal" th:field="*{codigo_postal}" placeholder="Código Postal"/>
+    <br/>
+    <input type="submit" value="Crear Locker"/>
+</form>
+
+<h2 th:if="${message}" th:text="${message}"></h2>
+<h2 th:if="${errorMessage}" th:text="${errorMessage}"></h2>
 </body>
 </html>

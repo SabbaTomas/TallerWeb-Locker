@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <link rel="stylesheet" th:href="@{/css/error.css}"/>
+</head>
+<body>
+<div class="error-container">
+    <h1>¡Oops! Algo salió mal</h1>
+    <p th:text="${errorMessage}"></p>
+    <a href="/lockers/mapa" class="btn">Volver al mapa</a>
+</div>
+</body>
+</html>

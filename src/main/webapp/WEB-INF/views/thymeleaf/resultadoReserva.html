@@ -2,10 +2,58 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Resultado de Reserva</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        p, ul {
+            color: #555;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            background-color: #f4f4f4;
+            margin-bottom: 5px;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 <h1>Resultado de la Reserva</h1>
 <p th:text="${mensaje}"></p>
-<a href="/reserva">Volver al formulario</a>
+<p th:if="${costoTotal != null}">Detalles de la Reserva:</p>
+<ul th:if="${costoTotal != null}">
+    <li th:text="'ID Reserva: ' + ${reservaId}"></li>
+    <li th:text="'ID Locker: ' + ${lockerId}"></li>
+    <li th:text="'ID Usuario: ' + ${usuarioId}"></li>
+    <li th:text="'Costo Total: ' + ${costoTotal}"></li>
+    <li th:text="'Cantidad de Lockers: ' + ${cantidadLockers}"></li>
+    <li th:text="'Fecha Inicio: ' + ${fechaInicio}"></li>
+    <li th:text="'Fecha Fin: ' + ${fechaFin}"></li>
+</ul>
+<p th:if="${jsonReserva != null}">
+    <a th:href="@{/mostrarJson(jsonReserva=${jsonReserva})}">Ver JSON de la Reserva</a>
+</p>
+<a th:href="@{/mapa(idUsuario=${usuarioId})}">Volver al mapa</a>
+<a th:href="@{/pago/mp(jsonReserva=${jsonReserva})}">Proceder al Pago</a>
 </body>
 </html>

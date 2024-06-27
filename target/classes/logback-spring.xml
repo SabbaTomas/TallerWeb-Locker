@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Incluir la configuración base de Spring Boot -->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- Definir un logger para presentacion.ControladorReserva con nivel DEBUG -->
+    <logger name="com.tallerwebi.presentacion.ControladorReserva" level="DEBUG"/>
+
+    <!-- Configuración del root logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

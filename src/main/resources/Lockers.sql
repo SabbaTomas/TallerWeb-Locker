@@ -1,1 +1,0 @@
-SELECT * FROM tw1.reserva;

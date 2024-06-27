@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Proyecto base Taller Web I (Maven and Thymeleaf)
 ===============================
 
@@ -47,6 +46,3 @@ $ mvn test -Dtest="VistaLoginE2E"
 * Playwright 1.36.0
 
 *_Proyecto modificado en base a: [Spring MVC hello world example (Maven and Thymeleaf)](https://mkyong.com/spring-mvc/spring-mvc-hello-world-example/) _*
-=======
-# Tallwer-Web-1
->>>>>>> origin/Maxi-2

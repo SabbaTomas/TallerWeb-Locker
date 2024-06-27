@@ -3,46 +3,108 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <meta name="google-signin-client_id" content="294343571598-u8bit25ce6a64tcm3duhl2fof4kc0c6k.apps.googleusercontent.com">
     <title>Taller Web I</title>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
     <!-- Boostrap core css -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
     <!-- custom style -->
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
-
 </head>
-
 <body>
-
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">UNLAM</a>
+    <a class="navbar-brand" href="#">LOCKERS</a>
 </nav>
 
 <main role="main" class="container">
+    <div class="container">
+        <div class="row d-flex justify-content-center mt-5">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card py-3 px-2">
+                    <div class="g_id_signin" data-type="standard" data-onsuccess="onSignIn"></div>
+                    <div class="row mx-auto g-signin2"></div>
+                    <div class="division">
+                        <div class="row">
+                            <div class="col-3"><div class="line l"></div></div>
+                            <div class="col-6"><span>O CON CORREO ELECTRÓNICO</span></div>
+                            <div class="col-3"><div class="line r"></div></div>
+                        </div>
+                    </div>
+                    <form class="myform" action="#" th:action="@{/validar-login}" th:object="${datosLogin}" method="post">
+                        <div class="form-group" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
+                            <input th:field="*{email}" id="email" placeholder="Email" type="email" class="form-control" required>
+                        </div>
+                        <div class="form-group" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
+                            <input th:field="*{password}" type="password" id="password" placeholder="Password" class="form-control" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                    <label class="form-check-label" for="exampleCheck1">Recordarme</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12 bn">Olvidaste tu contraseña?</div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-block btn-primary btn-lg"><small><i class="far fa-user pr-2"></i>LOGIN</small></button>
+                            <a class="btn btn-block btn-secondary btn-lg" id="ir-a-registrarme" href="nuevo-usuario">Registrarme</a>
+                        </div>
+                        <p th:if="${error != null}" class="alert alert-danger" th:text="${error}"></p>
+                    </form>
 
-    <div class = "container">
-        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-            <form action="#" th:action="@{/validar-login}" method="POST" th:object="${datosLogin}">
-                <h3 class="form-signin-heading">Taller Web I</h3>
-                <hr class="colorgraph"><br>
 
-                <input th:field="*{email}" id="email" type="email" class="form-control" required/>
-                <input th:field="*{password}" type="password" id="password" class="form-control" required/>
 
-                <button id="btn-login" class="btn btn-lg btn-primary btn-block" Type="Submit">Login</button>
-
-                <p th:if="${error != null}" class="alert alert-danger" th:text="'Error ' + ${error}">
-                </p>
-            </form>
-            <a id="ir-a-registrarme" href="nuevo-usuario">Registrarme</a>
+                </div>
+            </div>
         </div>
     </div>
 </main>
 <!-- /.container -->
 
 <!-- Boostrap core js -->
-<script type="text/javascript" th:src="@{webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+<script>
+    // cargar la biblioteca de autenticación de Google
+    gapi.load('auth2', function () {
+        gapi.auth2.init();
+    });
+
+    function onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId());
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail());
+
+        console.log('Redirigiendo a home.html');
+        window.location.href = 'home.html';
+    }
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }
+
+    function checkPopupClosed(popup) {
+        var interval = setInterval(function () {
+            if (popup.closed) {
+                clearInterval(interval);
+                console.log('La ventana emergente se ha cerrado.');
+                // Realizar acciones adicionales después de que la ventana emergente se cierre
+            }
+        }, 1000);
+    }
+</script>
 </body>
 </html>

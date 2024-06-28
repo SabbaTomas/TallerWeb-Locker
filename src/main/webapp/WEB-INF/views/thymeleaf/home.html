@@ -6,7 +6,7 @@
 
   <title>Taller Web I</title>
 
-  <!-- Boostrap core css -->
+  <!-- Bootstrap core css -->
   <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
 
   <!-- custom style -->
@@ -21,15 +21,15 @@
 </nav>
 
 <main role="main" class="container">
-  <div class = "container">
-    <h1>Bienvenidos a Taller Web 1</h1>
-
-    <a href="login.html" class="btn btn-lg btn-primary btn-block">Volver</a>
+  <div class="d-flex flex-column align-items-center justify-content-center vh-100">
+    <h1 class="mb-4">Bienvenidos a Taller Web 1</h1>
+    <a th:href="@{/mapa(idUsuario=${usuarioId})}" class="btn btn-lg btn-primary mb-2">Ir a Lockers</a>
+    <a th:href="@{/login}" class="btn btn-lg btn-secondary">Volver</a>
   </div>
 </main>
 <!-- /.container -->
 
-<!-- Boostrap core js -->
-<script type="text/javascript" th:src="@{webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+<!-- Bootstrap core js -->
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
 </body>
 </html>

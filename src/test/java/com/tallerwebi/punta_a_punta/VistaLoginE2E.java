@@ -44,26 +44,33 @@ public class VistaLoginE2E {
     }
 
     @Test
-    void deberiaDecirUNLAMEnElNavbar() {
+    void deberiaDecirLOCKERSEnElNavbar() {
         String texto = vistaLogin.obtenerTextoDeLaBarraDeNavegacion();
-        assertThat("UNLAM", equalToIgnoringCase(texto));
+        assertThat("LOCKERS", equalToIgnoringCase(texto));
     }
 
     @Test
     void deberiaDarUnErrorAlNoCompletarElLoginYTocarElBoton() {
-        vistaLogin.escribirEMAIL("damian@unlam.edu.ar");
+        vistaLogin.escribirEMAIL("error@unlam.edu.ar");
         vistaLogin.escribirClave("unlam");
         vistaLogin.darClickEnIniciarSesion();
         String texto = vistaLogin.obtenerMensajeDeError();
-        assertThat("Error Usuario o clave incorrecta", equalToIgnoringCase(texto));
+        assertThat("Usuario o clave incorrecta", equalToIgnoringCase(texto));
     }
 
     @Test
     void deberiaNavegarAlHomeSiElUsuarioExiste() {
-        vistaLogin.escribirEMAIL("test@unlam.edu.ar");
-        vistaLogin.escribirClave("test");
+        vistaLogin.escribirEMAIL("pruebaTest@unlam.edu.ar");
+        vistaLogin.escribirClave("prueba1234");
         vistaLogin.darClickEnIniciarSesion();
         String url = vistaLogin.obtenerURLActual();
-        assertThat(url, containsStringIgnoringCase("/spring/home"));
+        assertThat(url, containsStringIgnoringCase("/lockers/home"));
+    }
+
+    @Test
+    void deberiaNavegarAlRegistrarAlClicEnRegistrarme() {
+        vistaLogin.darClickEnRegistrarme();
+        String url = vistaLogin.obtenerURLActual();
+        assertThat(url, containsStringIgnoringCase("/lockers/nuevo-usuario"));
     }
 }

@@ -6,11 +6,11 @@ public class VistaLogin extends VistaWeb {
 
     public VistaLogin(Page page) {
         super(page);
-        page.navigate("localhost:8080/spring/login");
+        page.navigate("localhost:8080/lockers/login");
     }
 
     public String obtenerTextoDeLaBarraDeNavegacion(){
-        return this.obtenerTextoDelElemento("nav a.navbar-brand");
+        return this.obtenerTextoDelElemento("nav a.nav");
     }
 
     public String obtenerMensajeDeError(){
@@ -26,6 +26,10 @@ public class VistaLogin extends VistaWeb {
     }
 
     public void darClickEnIniciarSesion(){
-        this.darClickEnElElemento("#btn-login");
+        this.darClickEnElElemento("button.btn");
+    }
+
+    public void darClickEnRegistrarme(){
+        this.darClickEnElElemento("a.btn");
     }
 }

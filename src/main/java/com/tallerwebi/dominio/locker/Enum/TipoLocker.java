@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.locker;
+package com.tallerwebi.dominio.locker.Enum;
 
 public enum TipoLocker {
 

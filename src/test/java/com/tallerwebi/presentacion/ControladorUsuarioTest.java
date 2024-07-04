@@ -1,8 +1,9 @@
 package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.locker.Locker;
+import com.tallerwebi.dominio.reserva.Reserva;
 import com.tallerwebi.dominio.usuario.ServicioUsuario;
-import com.tallerwebi.dominio.excepcion.UsuarioNoEncontrado;
+import com.tallerwebi.dominio.usuario.excepciones.UsuarioNoEncontrado;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,6 +24,7 @@ public class ControladorUsuarioTest {
     @Mock
     private HttpSession sessionMock;
 
+    @Mock
     private ControladorUsuario controladorUsuario;
 
     @BeforeEach
@@ -32,67 +34,70 @@ public class ControladorUsuarioTest {
     }
 
     @Test
-    public void buscarLockersPorCodigoPostalUsuarioDeberiaRetornarLockers() {
-        // Preparación
-        String codigoPostal = "12345";
-        when(sessionMock.getAttribute("codigoPostalUsuario")).thenReturn(codigoPostal);
-        List<Locker> lockersMock = List.of(new Locker());
-        when(servicioUsuarioMock.obtenerLockersPorCodigoPostalUsuario(codigoPostal)).thenReturn(lockersMock);
+    public void dadoUnUsuarioIdValidoBuscarLockersPorUsuarioDeberiaRetornarLockersYReservas() {
+        // Dado
+        Long idUsuario = 1L;
+        when(sessionMock.getAttribute("USUARIO_ID")).thenReturn(idUsuario);
 
-        // Ejecución
-        ModelAndView modelAndView = controladorUsuario.buscarLockersPorCodigoPostalUsuario();
+        Locker lockerMock = new Locker();
+        Reserva reservaMock = new Reserva();
+        reservaMock.setLocker(lockerMock);
 
-        // Validación
+        List<Reserva> reservasMock = List.of(reservaMock);
+
+        when(servicioUsuarioMock.obtenerReservasPorUsuario(idUsuario)).thenReturn(reservasMock);
+
+        // Cuando
+        ModelAndView modelAndView = controladorUsuario.buscarLockersPorUsuario();
+
+        // Entonces
         assertEquals("lockers-usuario", modelAndView.getViewName());
-        assertEquals(lockersMock, modelAndView.getModel().get("lockers"));
-        assertEquals(codigoPostal, modelAndView.getModel().get("codigoPostal"));
-        assertEquals(null, modelAndView.getModel().get("latitud"));
-        assertEquals(null, modelAndView.getModel().get("longitud"));
-        assertEquals(null, modelAndView.getModel().get("mostrarAlternativos"));
+        assertEquals(reservasMock, modelAndView.getModel().get("reservas"));
+        assertEquals(List.of(lockerMock), modelAndView.getModel().get("lockers"));
     }
 
     @Test
-    public void buscarLockersPorCodigoPostalUsuarioDeberiaManejarExcepciones() {
-        // Preparación
-        String codigoPostal = "12345";
-        when(sessionMock.getAttribute("codigoPostalUsuario")).thenReturn(codigoPostal);
-        when(servicioUsuarioMock.obtenerLockersPorCodigoPostalUsuario(codigoPostal)).thenThrow(new UsuarioNoEncontrado("Usuario no encontrado"));
+    public void dadoUnUsuarioIdInvalidoBuscarLockersPorUsuarioDeberiaRetornarError() {
+        // Dado
+        Long idUsuario = 1L;
+        when(sessionMock.getAttribute("USUARIO_ID")).thenReturn(idUsuario);
+        when(servicioUsuarioMock.obtenerReservasPorUsuario(idUsuario)).thenThrow(new UsuarioNoEncontrado("Usuario no encontrado"));
 
-        // Ejecución
-        ModelAndView modelAndView = controladorUsuario.buscarLockersPorCodigoPostalUsuario();
+        // Cuando
+        ModelAndView modelAndView = controladorUsuario.buscarLockersPorUsuario();
 
-        // Validación
+        // Entonces
         assertEquals("error", modelAndView.getViewName());
         assertEquals("Usuario no encontrado", modelAndView.getModel().get("mensaje"));
     }
 
     @Test
-    public void verLockersRegistradosDeberiaRetornarLockers() {
-        // Preparación
+    public void dadoUnUsuarioIdValidoVerLockersRegistradosDeberiaRetornarLockers() {
+        // Dado
         Long idUsuario = 1L;
         when(sessionMock.getAttribute("userId")).thenReturn(idUsuario);
         List<Locker> lockersMock = List.of(new Locker());
         when(servicioUsuarioMock.obtenerTodosLosLockersRegistrados(idUsuario)).thenReturn(lockersMock);
 
-        // Ejecución
+        // Cuando
         ModelAndView modelAndView = controladorUsuario.verLockersRegistrados();
 
-        // Validación
+        // Entonces
         assertEquals("todosLosLockers", modelAndView.getViewName());
         assertEquals(lockersMock, modelAndView.getModel().get("lockers"));
     }
 
     @Test
-    public void verLockersRegistradosDeberiaManejarExcepciones() {
-        // Preparación
-        Long idUsuario = 1L;
+    public void dadoUnUsuarioIdInvalidoVerLockersRegistradosDeberiaRetornarError() {
+        // Dado
+        Long idUsuario = 11L;
         when(sessionMock.getAttribute("userId")).thenReturn(idUsuario);
         when(servicioUsuarioMock.obtenerTodosLosLockersRegistrados(idUsuario)).thenThrow(new UsuarioNoEncontrado("Usuario no encontrado"));
 
-        // Ejecución
+        // Cuando
         ModelAndView modelAndView = controladorUsuario.verLockersRegistrados();
 
-        // Validación
+        // Entonces
         assertEquals("error", modelAndView.getViewName());
         assertEquals("Usuario no encontrado", modelAndView.getModel().get("mensaje"));
     }

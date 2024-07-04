@@ -2,11 +2,11 @@ package com.tallerwebi.presentacion;
 
 import com.tallerwebi.dominio.locker.Locker;
 import com.tallerwebi.dominio.locker.ServicioLocker;
-import com.tallerwebi.dominio.locker.TipoLocker;
+import com.tallerwebi.dominio.locker.Enum.TipoLocker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,15 +15,14 @@ import java.util.List;
 
 @Controller
 public class ControladorLocker {
-    private static final Logger logger = LoggerFactory.getLogger(ControladorLocker.class);
 
     final ServicioLocker servicioLocker;
 
+    @Autowired
     public ControladorLocker(ServicioLocker servicioLocker) {
         this.servicioLocker = servicioLocker;
     }
 
-    @Transactional
     @GetMapping("/crear-locker")
     public ModelAndView mostrarFormularioCrearLocker(@RequestParam("tipoLocker") TipoLocker tipoLocker) {
         ModelAndView mav = new ModelAndView("crear-locker");
@@ -33,7 +32,6 @@ public class ControladorLocker {
         return mav;
     }
 
-    @Transactional
     @PostMapping("/crear-locker")
     public ModelAndView crearLocker(@ModelAttribute Locker nuevoLocker) {
         ModelAndView mav = new ModelAndView();
@@ -54,16 +52,13 @@ public class ControladorLocker {
         return "envio-actualizar-form";
     }
 
-    @Transactional
     @PostMapping("/actualizar-locker")
     public ModelAndView actualizarLocker(@RequestParam Long idLocker, @RequestParam TipoLocker tipoLocker) {
         ModelAndView mav = new ModelAndView();
         try {
-            logger.debug("Actualizando locker con id: {} y tipo: {}", idLocker, tipoLocker);
             servicioLocker.actualizarLocker(idLocker, tipoLocker);
             mav.setViewName("envio-actualizar");
         } catch (Exception e) {
-            logger.error("Error al actualizar locker: {}", e.getMessage());
             mav.setViewName("error");
             mav.addObject("errorMessage", "Error al actualizar locker: " + e.getMessage());
         }
@@ -80,7 +75,6 @@ public class ControladorLocker {
 
 
     @GetMapping("/eliminar-locker")
-    @Transactional
     public String mostrarFormularioEliminar(Model model) {
         return "envio-eliminar-form";
     }
@@ -92,14 +86,12 @@ public class ControladorLocker {
             servicioLocker.eliminarLocker(idLocker);
             mav.setViewName("envio-eliminar");
         } catch (Exception e) {
-            logger.error("Error al eliminar: {}", e.getMessage());
             mav.setViewName("error");
             mav.addObject("errorMessage", "Error al eliminar locker.");
         }
         return mav;
     }
 
-    @Transactional
     @GetMapping("/lockers-por-tipo")
     public ModelAndView buscarLockersPorTipo(@RequestParam TipoLocker tipoLocker) {
         ModelAndView mav = new ModelAndView();
@@ -114,7 +106,6 @@ public class ControladorLocker {
         return mav;
     }
 
-    @Transactional
     @GetMapping("/mapa")
     public ModelAndView mostrarLockers() {
         List<Locker> lockers = servicioLocker.obtenerLockersSeleccionados();
@@ -122,7 +113,6 @@ public class ControladorLocker {
     }
 
 
-    @Transactional
     @GetMapping("/search")
     public ModelAndView buscarLockersPorCodigoPostal(
             @RequestParam(value = "codigoPostal", required = false) String codigoPostal,

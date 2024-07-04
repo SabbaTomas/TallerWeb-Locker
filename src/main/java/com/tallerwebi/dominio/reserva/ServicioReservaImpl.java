@@ -1,20 +1,14 @@
-package com.tallerwebi.infraestructura.reserva;
+package com.tallerwebi.dominio.reserva;
 
-import com.tallerwebi.dominio.excepcion.ReservaActivaExistenteException;
-import com.tallerwebi.dominio.excepcion.UsuarioNoEncontradoException;
+import com.tallerwebi.dominio.reserva.excepciones.ReservaActivaExistenteException;
+import com.tallerwebi.dominio.usuario.excepciones.UsuarioNoEncontradoException;
 import com.tallerwebi.dominio.locker.Locker;
 import com.tallerwebi.dominio.locker.RepositorioDatosLocker;
-import com.tallerwebi.dominio.reserva.RepositorioReserva;
-import com.tallerwebi.dominio.reserva.ServicioReserva;
-import com.tallerwebi.dominio.excepcion.LockerNoEncontrado;
-import com.tallerwebi.dominio.reserva.Reserva;
+import com.tallerwebi.dominio.locker.excepciones.LockerNoEncontrado;
 import com.tallerwebi.dominio.usuario.RepositorioUsuario;
 import com.tallerwebi.dominio.usuario.Usuario;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -22,19 +16,21 @@ import java.time.temporal.ChronoUnit;
 @Service
 public class ServicioReservaImpl implements ServicioReserva {
 
-    @Autowired
-    private RepositorioUsuario repositorioUsuario;
+
+    private final RepositorioUsuario repositorioUsuario;
+    private final RepositorioDatosLocker repositorioDatosLocker;
+    private final RepositorioReserva repositorioReserva;
 
     @Autowired
-    private RepositorioDatosLocker repositorioDatosLocker;
+    public ServicioReservaImpl(RepositorioUsuario repositorioUsuario, RepositorioDatosLocker repositorioDatosLocker,
+                               RepositorioReserva repositorioReserva) {
+        this.repositorioUsuario = repositorioUsuario;
+        this.repositorioDatosLocker = repositorioDatosLocker;
+        this.repositorioReserva = repositorioReserva;
+    }
 
-    private static final Logger logger = LoggerFactory.getLogger(ServicioReservaImpl.class);
-
-    @Autowired
-    private RepositorioReserva repositorioReserva;
 
     @Override
-    @Transactional
     public Usuario consultarUsuarioDeReserva(String email, String password) {
         Usuario usuario = repositorioUsuario.buscarUsuario(email, password);
         if (usuario == null) {
@@ -44,7 +40,6 @@ public class ServicioReservaImpl implements ServicioReserva {
     }
 
     @Override
-    @Transactional
     public Locker buscarLockerPorID(Long idLocker) {
         Locker locker = repositorioDatosLocker.obtenerLockerPorId(idLocker);
         if (locker == null) {
@@ -54,13 +49,11 @@ public class ServicioReservaImpl implements ServicioReserva {
     }
 
     @Override
-    @Transactional
     public boolean tieneReservaActiva(Long idUsuario, Long idLocker) {
         return repositorioReserva.tieneReservaActiva(idUsuario, idLocker);
     }
 
     @Override
-    @Transactional
     public Reserva prepararDatosReserva(Long idUsuario, Long idLocker) {
         if (!repositorioUsuario.existeUsuarioPorId(idUsuario)) {
             throw new UsuarioNoEncontradoException("Usuario no encontrado con ID: " + idUsuario);
@@ -83,39 +76,30 @@ public class ServicioReservaImpl implements ServicioReserva {
         return reserva;
     }
 
-
     @Override
-    @Transactional
-    public Reserva registrarReserva(Reserva reserva) throws ReservaActivaExistenteException {
-        try {
-            Usuario usuario = repositorioUsuario.buscarUsuario(reserva.getUsuario().getEmail(), reserva.getUsuario().getPassword());
-            if (usuario == null) {
-                throw new UsuarioNoEncontradoException("Usuario no encontrado con email: " + reserva.getUsuario().getEmail());
-            }
-
-            if (repositorioReserva.tieneReservaActiva(usuario.getId(), reserva.getLocker().getId())) {
-                throw new ReservaActivaExistenteException("El usuario ya tiene una reserva activa para este locker");
-            }
-
-            Locker locker = repositorioDatosLocker.obtenerLockerPorId(reserva.getLocker().getId());
-            if (locker == null) {
-                throw new LockerNoEncontrado("Locker no encontrado con ID: " + reserva.getLocker().getId());
-            }
-
-            double costoTotal = calcularCosto(reserva.getFechaReserva(), reserva.getFechaFinalizacion());
-
-            reserva.setCosto(costoTotal);
-
-            repositorioReserva.guardarReserva(reserva);
-
-            return reserva;
-        } catch (UsuarioNoEncontradoException | LockerNoEncontrado | ReservaActivaExistenteException e) {
-            logger.error("Error al registrar la reserva: {}", e.getMessage());
-            throw e;
-        } catch (Exception e) {
-            logger.error("Error inesperado al registrar la reserva", e);
-            throw new RuntimeException("Error inesperado al registrar la reserva", e); // Lanzamos una excepción genérica
+    public Reserva registrarReserva(Reserva reserva) throws ReservaActivaExistenteException, UsuarioNoEncontradoException, LockerNoEncontrado {
+        Usuario usuario = repositorioUsuario.buscarUsuario(reserva.getUsuario().getEmail(), reserva.getUsuario().getPassword());
+        if (usuario == null) {
+            throw new UsuarioNoEncontradoException("Usuario no encontrado con email: " + reserva.getUsuario().getEmail());
         }
+
+        if (repositorioReserva.tieneReservaActiva(usuario.getId(), reserva.getLocker().getId())) {
+            throw new ReservaActivaExistenteException("El usuario ya tiene una reserva activa para este locker");
+        }
+
+        Locker locker = repositorioDatosLocker.obtenerLockerPorId(reserva.getLocker().getId());
+        if (locker == null) {
+            throw new LockerNoEncontrado("Locker no encontrado con ID: " + reserva.getLocker().getId());
+        }
+
+        double costoTotal = calcularCosto(reserva.getFechaReserva(), reserva.getFechaFinalizacion());
+
+        reserva.setCosto(costoTotal);
+        reserva.setEstado("pendiente");
+
+        repositorioReserva.guardarReserva(reserva);
+
+        return reserva;
     }
 
 
@@ -126,7 +110,6 @@ public class ServicioReservaImpl implements ServicioReserva {
     }
 
     @Override
-    @Transactional
     public Usuario consultarLockerDeReserva(Usuario usuario, Locker locker) {
         Locker lockerExistente = repositorioDatosLocker.obtenerLockerPorId(locker.getId());
         Usuario usuarioExistente = repositorioUsuario.buscar(usuario.getEmail());
@@ -141,5 +124,4 @@ public class ServicioReservaImpl implements ServicioReserva {
 
         return usuarioExistente;
     }
-
 }

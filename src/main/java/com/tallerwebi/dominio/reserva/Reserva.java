@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "Reserva")
 public class Reserva {
 
     @Id
@@ -16,6 +17,7 @@ public class Reserva {
     private LocalDate fechaReserva;
     private LocalDate fechaFinalizacion;
     private double costo;
+    private String estado;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
@@ -24,6 +26,7 @@ public class Reserva {
     @ManyToOne
     @JoinColumn(name = "locker_id")
     private Locker locker;
+
 
     // Getters y setters para todos los campos
 
@@ -59,6 +62,14 @@ public class Reserva {
         this.costo = costo;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public Usuario getUsuario() {
         return usuario;
     }
@@ -74,4 +85,14 @@ public class Reserva {
     public void setLocker(Locker locker) {
         this.locker = locker;
     }
+
+/*    public List<Penalizacion> getPenalizaciones() {
+        return penalizaciones;
+    }
+
+    public void setPenalizaciones(List<Penalizacion> penalizaciones) {
+        this.penalizaciones = penalizaciones;
+    }
+
+ */
 }

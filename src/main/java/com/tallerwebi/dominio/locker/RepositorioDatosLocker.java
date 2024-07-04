@@ -1,6 +1,8 @@
 package com.tallerwebi.dominio.locker;
 
 
+import com.tallerwebi.dominio.locker.Enum.TipoLocker;
+
 import java.util.List;
 
 public interface RepositorioDatosLocker  {

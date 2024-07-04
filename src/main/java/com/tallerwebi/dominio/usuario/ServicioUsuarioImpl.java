@@ -1,12 +1,11 @@
-package com.tallerwebi.infraestructura.usuario;
+package com.tallerwebi.dominio.usuario;
 
 import com.tallerwebi.dominio.locker.Locker;
-import com.tallerwebi.dominio.usuario.RepositorioUsuario;
-import com.tallerwebi.dominio.usuario.ServicioUsuario;
-import com.tallerwebi.dominio.usuario.Usuario;
-import com.tallerwebi.dominio.excepcion.ParametrosDelLockerInvalidos;
-import com.tallerwebi.dominio.excepcion.PasswordInvalido;
-import com.tallerwebi.dominio.excepcion.UsuarioNoEncontrado;
+import com.tallerwebi.dominio.locker.excepciones.ParametrosDelLockerInvalidos;
+
+import com.tallerwebi.dominio.reserva.Reserva;
+import com.tallerwebi.dominio.usuario.excepciones.PasswordInvalido;
+import com.tallerwebi.dominio.usuario.excepciones.UsuarioNoEncontrado;
 import com.tallerwebi.dominio.locker.ServicioLocker;
 import com.tallerwebi.dominio.reserva.RepositorioReserva;
 import com.tallerwebi.util.MD5Util;
@@ -87,6 +86,17 @@ public class ServicioUsuarioImpl implements ServicioUsuario {
 
         repositorioUsuario.modificar(usuarioExistente);
     }
+
+    @Override
+    public List<Reserva> obtenerReservasPorUsuario(Long idUsuario) throws UsuarioNoEncontrado {
+        Usuario usuario = repositorioUsuario.buscarUsuarioPorId(idUsuario);
+        if (usuario == null) {
+            throw new UsuarioNoEncontrado("No se encontró ningún usuario con el ID: " + idUsuario);
+        }
+        return repositorioReserva.obtenerReservasPorUsuario(idUsuario);
+    }
+
+
 
     private boolean esPasswordValido(String password) {
         return password != null && password.length() >= 8 && password.matches(".*\\d.*");

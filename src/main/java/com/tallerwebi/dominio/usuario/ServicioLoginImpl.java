@@ -1,9 +1,6 @@
-package com.tallerwebi.infraestructura.usuario;
+package com.tallerwebi.dominio.usuario;
 
-import com.tallerwebi.dominio.usuario.RepositorioUsuario;
-import com.tallerwebi.dominio.usuario.ServicioLogin;
-import com.tallerwebi.dominio.usuario.Usuario;
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.usuario.excepciones.UsuarioExistente;
 import com.tallerwebi.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +8,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service("servicioLogin")
-@Transactional
 public class ServicioLoginImpl implements ServicioLogin {
 
-    private RepositorioUsuario repositorioUsuario;
+    private final RepositorioUsuario repositorioUsuario;
 
     @Autowired
     public ServicioLoginImpl(RepositorioUsuario repositorioUsuario){

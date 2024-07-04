@@ -3,8 +3,11 @@ package com.tallerwebi.infraestructura;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
 import com.tallerwebi.dominio.usuario.Usuario;
+import com.tallerwebi.infraestructura.config.HibernateTestInfraestructuraConfig;
 import com.tallerwebi.infraestructura.usuario.RepositorioUsuarioImpl;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,14 +16,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {HibernateTestInfraestructuraConfig.class})
 public class RepositorioUsuarioTest {
 
     @Mock
@@ -35,15 +45,16 @@ public class RepositorioUsuarioTest {
     @InjectMocks
     private RepositorioUsuarioImpl repositorioUsuario;
 
-    private LocalValidatorFactoryBean validator;
-
     @BeforeEach
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
     }
 
     @Test
-    public void queSePuedaBuscarUsuario() {
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioExistentePuedaBuscarUsuario() {
         String email = "test@unlam.com";
         String password = "password1234";
         Usuario usuario = new Usuario();
@@ -60,7 +71,9 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
-    public void queSePuedaGuardarUsuario() {
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioPuedaGuardarUsuario() {
         Usuario usuario = new Usuario();
         usuario.setEmail("test@unlam.com");
 
@@ -69,7 +82,9 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
-    public void queSePuedaBuscarUsuarioPorEmail() {
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioExistentePuedaBuscarUsuarioPorEmail() {
         String email = "test@unlam.com";
         Usuario usuario = new Usuario();
         usuario.setEmail(email);
@@ -83,7 +98,9 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
-    public void queNoSePuedaBuscarPorEmailSiNoExiste() {
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioNoExistenteNoSePuedaBuscarPorEmail() {
         String email = "usuario_inexistente@unlam.com";
 
         when(session.createCriteria(Usuario.class)).thenReturn(criteria);
@@ -95,7 +112,9 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
-    public void queSePuedaBuscarUsuarioPorId() {
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioExistentePuedaBuscarUsuarioPorId() {
         Long idUsuario = 1L;
         Usuario usuario = new Usuario();
         usuario.setId(idUsuario);
@@ -107,7 +126,9 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
-    public void queSePuedaBuscarUsuarioPorCodigoPostal() {
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioExistentePuedaBuscarUsuarioPorCodigoPostal() {
         String codigoPostal = "1704";
         Usuario usuario = new Usuario();
         usuario.setCodigoPostal(codigoPostal);
@@ -121,27 +142,28 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
-    public void queSePuedaModificarUsuario() {
-        //preparacion
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioExistentePuedaModificarUsuario() {
         long id = 1L;
         Usuario usuario = new Usuario();
         usuario.setId(id);
         usuario.setEmail("test@unlam.com");
 
-        // ejecucion
         String nuevoEmail = "nuevo_email@unlam.com";
         Usuario usuarioActualizado = new Usuario();
         usuarioActualizado.setId(id);
         usuarioActualizado.setEmail(nuevoEmail);
-        // llamar al metodo modificar del repositorio
+
         repositorioUsuario.modificar(usuarioActualizado);
 
-        // verificacion
         verify(session).update(usuarioActualizado);
     }
 
     @Test
-    public void queSePuedaEliminarUsuario() {
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioExistentePuedaEliminarUsuario() {
         long id = 1L;
         Usuario usuario = new Usuario();
         usuario.setId(id);
@@ -155,7 +177,9 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
-    public void queNoSePuedaEliminarUsuarioNoExistente() {
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioNoExistenteNoSePuedaEliminarUsuario() {
         long id = 999L;
 
         when(session.get(Usuario.class, id)).thenReturn(null);
@@ -168,7 +192,9 @@ public class RepositorioUsuarioTest {
     }
 
     @Test
-    public void queSePuedaVerLaListaUsuarios() {
+    @Rollback
+    @Transactional
+    public void dadoQueUsuarioExistentePuedaVerLaListaUsuarios() {
         List<Usuario> usuarios = new ArrayList<>();
         usuarios.add(new Usuario("usuario1@unlam.com", "password1234"));
         usuarios.add(new Usuario("usuario2@unlam.com", "password1234"));

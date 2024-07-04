@@ -3,8 +3,9 @@ package com.tallerwebi.infraestructura.locker;
 import com.tallerwebi.util.Haversine;
 import com.tallerwebi.dominio.locker.Locker;
 import com.tallerwebi.dominio.locker.RepositorioDatosLocker;
-import com.tallerwebi.dominio.locker.TipoLocker;
+import com.tallerwebi.dominio.locker.Enum.TipoLocker;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -15,26 +16,25 @@ public class RepositorioDatosLockerImpl implements RepositorioDatosLocker {
 
     private final SessionFactory sessionFactory;
 
+    @Autowired
     public RepositorioDatosLockerImpl(SessionFactory sessionFactory) {
+
         this.sessionFactory = sessionFactory;
     }
 
 
     @Override
     public void guardar(Locker locker) {
+
         this.sessionFactory.getCurrentSession().save(locker);
     }
 
     @Override
     public Locker obtenerLockerPorId(Long idLocker) {
-        Locker locker = (Locker) this.sessionFactory.getCurrentSession()
+        return (Locker) this.sessionFactory.getCurrentSession()
                 .createQuery("FROM Locker WHERE id = :id")
                 .setParameter("id", idLocker)
                 .uniqueResult();
-        if (locker == null) {
-            throw new IllegalArgumentException("Locker no encontrado");
-        }
-        return locker;
     }
 
 
@@ -117,27 +117,3 @@ public class RepositorioDatosLockerImpl implements RepositorioDatosLocker {
 
 
 }
-/*
-$places = Places::where([
-        ['visible', '=', '1'],
-        ['deleted', '=', '0'],
-        ])->select(['id',
-        'name',
-        'description',
-        'latitude',
-        'longitude',
-        'deleted',
-        DB::raw('concat("' . env('APP_URL') . '", avatar_url) as avatarUrl'),
-        'user_id as userId',
-        'visible',
-        'address',
-        DB::raw('(6351 * acos( cos( radians(' . $latitude . ') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $langitude . ') ) + sin( radians(' . $latitude . ') ) * sin(radians(latitude)) ) ) AS distance')
-        ])
-        ->orderBy('distance')
-        ->havingRaw('distance < ' . env("PLACES_SEARCH_DISTANCE"))
-        ->take(env("LIMIT_SEARCH_DISTANCE"))
-        ->get()
-        ->toArray();
-
-
- */

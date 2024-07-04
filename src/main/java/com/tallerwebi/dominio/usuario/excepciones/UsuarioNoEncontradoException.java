@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.excepcion;
+package com.tallerwebi.dominio.usuario.excepciones;
 
 public class UsuarioNoEncontradoException extends RuntimeException {
     public UsuarioNoEncontradoException(String mensaje) {

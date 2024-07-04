@@ -1,4 +1,4 @@
-package com.tallerwebi.dominio.excepcion;
+package com.tallerwebi.dominio.locker.excepciones;
 
 public class LockerNoEncontrado extends RuntimeException{
 

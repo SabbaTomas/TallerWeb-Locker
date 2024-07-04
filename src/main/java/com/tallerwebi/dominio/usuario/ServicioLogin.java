@@ -1,7 +1,9 @@
 package com.tallerwebi.dominio.usuario;
 
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.usuario.excepciones.UsuarioExistente;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public interface ServicioLogin {
 
     Usuario consultarUsuario(String email, String password);

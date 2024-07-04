@@ -3,33 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
   <title>Taller Web I</title>
-
-  <!-- Bootstrap core css -->
   <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-  <!-- custom style -->
   <link rel="stylesheet" th:href="@{/css/main.css}"/>
-
 </head>
-
 <body>
-
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a class="navbar-brand" href="#">UNLAM</a>
 </nav>
-
 <main role="main" class="container">
   <div class="d-flex flex-column align-items-center justify-content-center vh-100">
     <h1 class="mb-4">Bienvenidos a Taller Web 1</h1>
-    <a th:href="@{/mapa(idUsuario=${usuarioId})}" class="btn btn-lg btn-primary mb-2">Ir a Lockers</a>
+    <a th:href="@{/mapa(idUsuario=${session.USUARIO_ID})}" class="btn btn-lg btn-primary mb-2">Ir al Mapa</a>
+    <a th:href="@{/lockersPorUsuario}" class="btn btn-lg btn-primary mb-2">Ir a Lockers</a>
     <a th:href="@{/login}" class="btn btn-lg btn-secondary">Volver</a>
   </div>
 </main>
-<!-- /.container -->
-
-<!-- Bootstrap core js -->
 <script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
 </body>
 </html>

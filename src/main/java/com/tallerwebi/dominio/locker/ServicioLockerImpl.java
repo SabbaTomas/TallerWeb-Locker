@@ -1,14 +1,11 @@
-package com.tallerwebi.infraestructura.locker;
+package com.tallerwebi.dominio.locker;
 
+import com.tallerwebi.dominio.locker.Enum.TipoLocker;
 import com.tallerwebi.util.Haversine;
-import com.tallerwebi.dominio.locker.Locker;
-import com.tallerwebi.dominio.locker.ServicioLocker;
-import com.tallerwebi.dominio.locker.TipoLocker;
-import com.tallerwebi.dominio.excepcion.LockerNoEncontrado;
-import com.tallerwebi.dominio.excepcion.ParametrosDelLockerInvalidos;
+import com.tallerwebi.dominio.locker.excepciones.LockerNoEncontrado;
+import com.tallerwebi.dominio.locker.excepciones.ParametrosDelLockerInvalidos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -17,16 +14,16 @@ import java.util.List;
 
 @Service
 public class ServicioLockerImpl implements ServicioLocker {
-    private final RepositorioDatosLockerImpl lockerRepository;
 
-    private static final Long INITIAL_ID = 7L;
+    private final RepositorioDatosLocker lockerRepository;
 
     @Autowired
-    public ServicioLockerImpl(RepositorioDatosLockerImpl lockerRepository) {
+    public ServicioLockerImpl(RepositorioDatosLocker lockerRepository) {
+
         this.lockerRepository = lockerRepository;
     }
 
-    @Transactional
+    @Override
     public void crearLocker(Locker locker) {
         if (locker == null || locker.getTipo() == null) {
             throw new ParametrosDelLockerInvalidos("Locker no puede tener parámetros nulos");
@@ -70,7 +67,6 @@ public class ServicioLockerImpl implements ServicioLocker {
 
 
     @Override
-    @Transactional
     public void actualizarLocker(Long idLocker, TipoLocker tipoLocker) {
         if (idLocker == null || idLocker <= 0) {
             throw new LockerNoEncontrado("No se encontró ningún locker con el ID proporcionado: " + idLocker);
@@ -88,7 +84,6 @@ public class ServicioLockerImpl implements ServicioLocker {
     }
 
     @Override
-    @Transactional
     public void eliminarLocker(Long idLocker) {
         if (idLocker == null || idLocker <= 0) {
             throw new ParametrosDelLockerInvalidos("ID de locker inválido");
@@ -105,7 +100,6 @@ public class ServicioLockerImpl implements ServicioLocker {
     }
 
     @Override
-    @Transactional
     public Locker obtenerLockerPorId(Long idLocker) {
         Locker locker = lockerRepository.obtenerLockerPorId(idLocker);
         if (locker == null) {
@@ -114,12 +108,12 @@ public class ServicioLockerImpl implements ServicioLocker {
         return locker;
     }
 
-    @Transactional
-    public List<Locker> obtenerLockersCercanos(double latitud, double longitud, double radio) {
+    @Override
+   public List<Locker> obtenerLockersCercanos(double latitud, double longitud, double radio) {
         return lockerRepository.encontrarLockersPorCercania(latitud, longitud, radio);
     }
 
-    @Transactional
+    @Override
     public List<Locker> obtenerLockersPorCodigoPostal(String codigoPostal) {
 
         if (codigoPostal == null || codigoPostal.isEmpty() ) {
@@ -128,13 +122,13 @@ public class ServicioLockerImpl implements ServicioLocker {
         return lockerRepository.obtenerLockersPorCodigoPostal(codigoPostal);
     }
 
-    @Transactional
+    @Override
     public List<Locker> obtenerLockersSeleccionados() {
         return lockerRepository.obtenerSeleccionados();
     }
 
 
-    @Transactional
+    @Override
     public List<Locker> buscarLockers(String codigoPostal, Double latitud, Double longitud, Double radio) {
         List<Locker> lockers;
 
@@ -160,8 +154,7 @@ public class ServicioLockerImpl implements ServicioLocker {
         return lockers;
     }
 
-
-    @Transactional
+    @Override
     public void eliminarTodos() {
         lockerRepository.eliminarTodos();
     }

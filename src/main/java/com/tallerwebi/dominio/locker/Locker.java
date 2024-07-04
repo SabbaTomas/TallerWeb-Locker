@@ -1,7 +1,7 @@
 package com.tallerwebi.dominio.locker;
 
 
-import com.tallerwebi.dominio.locker.TipoLocker;
+import com.tallerwebi.dominio.locker.Enum.TipoLocker;
 
 import javax.persistence.*;
 
@@ -20,6 +20,7 @@ public class Locker {
     private double latitud;
     private double longitud;
     private double distancia;
+    private double deudaGeneradaPorLocker;
 
 
     private String codigo_postal;
@@ -41,6 +42,9 @@ public class Locker {
         this.tipo = tipo;
     }
 
+    public Double getDeudaGeneradaPorLocker() { return  deudaGeneradaPorLocker ;}
+
+    public void setDeudaGeneradaPorLocker (Double deudaGeneradaPorLocker) {this.deudaGeneradaPorLocker= deudaGeneradaPorLocker; }
 
     public Long getId() {
         return id;

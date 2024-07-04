@@ -1,10 +1,12 @@
 package com.tallerwebi.dominio.locker;
 
+import com.tallerwebi.dominio.locker.Enum.TipoLocker;
+
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 public interface ServicioLocker {
-
-
 
     void crearLocker(Locker locker);
     void actualizarLocker(Long idLocker, TipoLocker tipoLocker);

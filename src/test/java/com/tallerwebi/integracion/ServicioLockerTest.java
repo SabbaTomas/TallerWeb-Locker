@@ -1,11 +1,13 @@
 package com.tallerwebi.integracion;
 
 import com.tallerwebi.dominio.locker.Locker;
+import com.tallerwebi.dominio.locker.RepositorioDatosLocker;
+import com.tallerwebi.dominio.locker.ServicioLocker;
 import com.tallerwebi.infraestructura.locker.RepositorioDatosLockerImpl;
-import com.tallerwebi.infraestructura.locker.ServicioLockerImpl;
-import com.tallerwebi.dominio.excepcion.LockerNoEncontrado;
-import com.tallerwebi.dominio.excepcion.ParametrosDelLockerInvalidos;
-import com.tallerwebi.dominio.locker.TipoLocker;
+import com.tallerwebi.dominio.locker.ServicioLockerImpl;
+import com.tallerwebi.dominio.locker.excepciones.LockerNoEncontrado;
+import com.tallerwebi.dominio.locker.excepciones.ParametrosDelLockerInvalidos;
+import com.tallerwebi.dominio.locker.Enum.TipoLocker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,17 +20,18 @@ import static org.mockito.Mockito.*;
 
 public class ServicioLockerTest {
 
-    private ServicioLockerImpl servicioLocker;
-    private RepositorioDatosLockerImpl repositorioDatosLocker;
+    private ServicioLocker servicioLocker;
+    private RepositorioDatosLocker repositorioDatosLocker;
 
     @BeforeEach
-    public void setUp() {
+    public void init() {
         repositorioDatosLocker = mock(RepositorioDatosLockerImpl.class);
         servicioLocker = new ServicioLockerImpl(repositorioDatosLocker);
     }
 
+    // Test de creación de Locker
     @Test
-    public void queSePuedaCrearUnLocker() throws ParametrosDelLockerInvalidos {
+    public void dadoQueElLockerEsValidoEntoncesCrearLockerDebeGuardarElLocker() throws ParametrosDelLockerInvalidos {
         // Preparación
         Locker locker = new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, "1704");
 
@@ -39,8 +42,9 @@ public class ServicioLockerTest {
         verify(repositorioDatosLocker, times(1)).guardar(locker);
     }
 
+    // Test de actualización de Locker
     @Test
-    public void queSePuedaActualizarUnLocker() throws LockerNoEncontrado, ParametrosDelLockerInvalidos {
+    public void dadoQueElLockerExisteEntoncesActualizarLockerDebeActualizarElLocker() throws LockerNoEncontrado, ParametrosDelLockerInvalidos {
         // Preparación
         Long idLocker = 1L;
         TipoLocker tipoInicial = TipoLocker.PEQUENIO;
@@ -58,9 +62,9 @@ public class ServicioLockerTest {
         assertEquals(nuevoTipo, locker.getTipo());
     }
 
-
+    // Test de actualización de Locker con tipo nulo
     @Test
-    public void queNoSePuedaActualizarLockerConTipoNulo() throws LockerNoEncontrado, ParametrosDelLockerInvalidos {
+    public void dadoQueElTipoDeLockerEsNuloEntoncesActualizarLockerDebeLanzarExcepcion() throws LockerNoEncontrado, ParametrosDelLockerInvalidos {
         // Preparación
         Long idLocker = 1L;
         TipoLocker tipoLocker = null;
@@ -73,8 +77,9 @@ public class ServicioLockerTest {
         assertEquals("Tipo de locker no puede ser nulo", exception.getMessage());
     }
 
+    // Test de eliminación de Locker
     @Test
-    public void queSePuedaEliminarUnLocker() throws ParametrosDelLockerInvalidos {
+    public void dadoQueElLockerExisteEntoncesEliminarLockerDebeEliminarElLocker() throws ParametrosDelLockerInvalidos {
         // Preparación
         Long idLocker = 1L;
 
@@ -85,8 +90,9 @@ public class ServicioLockerTest {
         verify(repositorioDatosLocker, times(1)).eliminar(idLocker);
     }
 
+    // Test de obtención de Lockers por tipo
     @Test
-    public void queSePuedanObtenerLockersPorTipo() throws ParametrosDelLockerInvalidos {
+    public void dadoQueExistenLockersDelTipoEspecificadoEntoncesObtenerLockersPorTipoDebeRetornarEsosLockers() throws ParametrosDelLockerInvalidos {
         // Preparación
         TipoLocker tipoLocker = TipoLocker.MEDIANO;
         List<Locker> lockers = Arrays.asList(
@@ -103,8 +109,9 @@ public class ServicioLockerTest {
         assertEquals(lockers, resultado);
     }
 
+    // Test de obtención de Locker por ID
     @Test
-    public void queSePuedaObtenerLockerPorId() throws ParametrosDelLockerInvalidos {
+    public void dadoQueElLockerConIdEspecificadoExisteEntoncesObtenerLockerPorIdDebeRetornarEseLocker() throws ParametrosDelLockerInvalidos {
         // Preparación
         Long idLocker = 1L;
         Locker locker = new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, "1704");
@@ -119,8 +126,9 @@ public class ServicioLockerTest {
         assertEquals(locker, resultado);
     }
 
+    // Test de obtención de Lockers por código postal
     @Test
-    public void queSePuedanObtenerLockersPorCodigoPostal() throws ParametrosDelLockerInvalidos {
+    public void dadoQueExistenLockersConElCodigoPostalEspecificadoEntoncesObtenerLockersPorCodigoPostalDebeRetornarEsosLockers() throws ParametrosDelLockerInvalidos {
         // Preparación
         String codigoPostal = "1704";
         List<Locker> lockers = Arrays.asList(
@@ -137,8 +145,9 @@ public class ServicioLockerTest {
         assertEquals(lockers, resultado);
     }
 
+    // Test de obtención de Lockers seleccionados
     @Test
-    public void queSePuedanObtenerLockersSeleccionados() {
+    public void dadoQueExistenLockersSeleccionadosEntoncesObtenerLockersSeleccionadosDebeRetornarEsosLockers() {
         // Preparación
         List<Locker> lockers = Arrays.asList(
                 new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, "1704"),
@@ -154,8 +163,9 @@ public class ServicioLockerTest {
         assertEquals(lockers, resultado);
     }
 
+    // Test de eliminación de todos los Lockers
     @Test
-    public void queSePuedanEliminarTodosLosLockers() {
+    public void dadoQueExistenLockersEntoncesEliminarTodosDebeEliminarTodosLosLockers() {
         // Ejecución
         servicioLocker.eliminarTodos();
 
@@ -163,10 +173,9 @@ public class ServicioLockerTest {
         verify(repositorioDatosLocker, times(1)).eliminarTodos();
     }
 
-    // Nuevos tests del camino no feliz
-
+    // Test del camino no feliz: creación de Locker con parámetros nulos
     @Test
-    public void queNoSePuedaCrearLockerConParametrosNulos() throws ParametrosDelLockerInvalidos {
+    public void dadoQueLosParametrosDelLockerSonNulosEntoncesCrearLockerDebeLanzarExcepcion() throws ParametrosDelLockerInvalidos {
         // Preparación
         Locker locker = new Locker();
 
@@ -178,8 +187,9 @@ public class ServicioLockerTest {
         assertEquals("Locker no puede tener parámetros nulos", exception.getMessage());
     }
 
+    // Test del camino no feliz: obtención de Lockers por tipo inválido
     @Test
-    public void queNoSePuedanObtenerLockersPorTipoInvalido() throws ParametrosDelLockerInvalidos {
+    public void dadoQueElTipoDeLockerEsInvalidoEntoncesObtenerLockersPorTipoDebeLanzarExcepcion() throws ParametrosDelLockerInvalidos {
         // Preparación
         TipoLocker tipoLocker = null;
 
@@ -191,8 +201,9 @@ public class ServicioLockerTest {
         assertEquals("Tipo de locker no puede ser nulo", exception.getMessage());
     }
 
+    // Test del camino no feliz: eliminación de Locker con ID inválido
     @Test
-    public void queNoSePuedaEliminarLockerConIdInvalido() throws ParametrosDelLockerInvalidos {
+    public void dadoQueElIdDeLockerEsInvalidoEntoncesEliminarLockerDebeLanzarExcepcion() throws ParametrosDelLockerInvalidos {
         // Preparación
         Long idLocker = -1L;
 
@@ -206,8 +217,9 @@ public class ServicioLockerTest {
         assertEquals("ID de locker inválido", exception.getMessage());
     }
 
+    // Test del camino no feliz: obtención de Lockers por código postal inválido
     @Test
-    public void queNoSePuedanObtenerLockersPorCodigoPostalInvalido() throws ParametrosDelLockerInvalidos {
+    public void dadoQueElCodigoPostalEsInvalidoEntoncesObtenerLockersPorCodigoPostalDebeLanzarExcepcion() throws ParametrosDelLockerInvalidos {
         // Preparación
         String codigoPostal = null;
 
@@ -219,8 +231,9 @@ public class ServicioLockerTest {
         assertEquals("Código postal no puede ser nulo o vacío", exception.getMessage());
     }
 
+    // Test del camino no feliz: actualización de Locker que no existe
     @Test
-    public void queNoSePuedaActualizarLockerConIdInvalido() throws LockerNoEncontrado, ParametrosDelLockerInvalidos {
+    public void dadoQueElLockerNoExisteEntoncesActualizarLockerDebeLanzarExcepcion() throws LockerNoEncontrado, ParametrosDelLockerInvalidos {
         // Preparación
         Long idLocker = -1L;
         TipoLocker nuevoTipo = TipoLocker.GRANDE;
@@ -235,9 +248,9 @@ public class ServicioLockerTest {
         assertEquals("No se encontró ningún locker con el ID proporcionado: " + idLocker, exception.getMessage());
     }
 
-
+    // Test del camino no feliz: obtención de Lockers con repositorio vacío
     @Test
-    public void queNoSePuedanObtenerLockersConRepositorioVacio() {
+    public void dadoQueElRepositorioEstaVacioEntoncesObtenerLockersSeleccionadosDebeRetornarListaVacia() {
         // Preparación
         when(repositorioDatosLocker.obtenerSeleccionados()).thenReturn(new ArrayList<>());
 
@@ -248,21 +261,11 @@ public class ServicioLockerTest {
         assertTrue(resultado.isEmpty());
     }
 
+    // Test de búsqueda de Lockers por código postal
     @Test
-    public void obtenerLockersPorCodigoPostal_Exitoso() throws ParametrosDelLockerInvalidos {
+    public void dadoQueExistenLockersConElCodigoPostalEspecificadoEntoncesBuscarLockersPorCodigoPostalDebeRetornarEsosLockers() throws ParametrosDelLockerInvalidos {
         String codigoPostal = "1704";
-        List<Locker> lockers = Arrays.asList(new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, codigoPostal));
-
-        when(repositorioDatosLocker.obtenerLockersPorCodigoPostal(codigoPostal)).thenReturn(lockers);
-
-        List<Locker> resultado = servicioLocker.obtenerLockersPorCodigoPostal(codigoPostal);
-        assertEquals(lockers, resultado);
-    }
-
-    @Test
-    public void buscarLockers_PorCodigoPostal() throws ParametrosDelLockerInvalidos {
-        String codigoPostal = "1704";
-        List<Locker> lockers = Arrays.asList(new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, codigoPostal));
+        List<Locker> lockers = List.of(new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, codigoPostal));
 
         when(servicioLocker.obtenerLockersPorCodigoPostal(codigoPostal)).thenReturn(lockers);
 
@@ -270,12 +273,13 @@ public class ServicioLockerTest {
         assertEquals(lockers, resultado);
     }
 
+    // Test de búsqueda de Lockers por coordenadas
     @Test
-    public void buscarLockers_PorCoordenadas() throws ParametrosDelLockerInvalidos {
-        Double latitud = 40.7128;
-        Double longitud = -74.0060;
-        Double radio = 5.0;
-        List<Locker> lockers = Arrays.asList(new Locker(TipoLocker.PEQUENIO, latitud, longitud, "1704"));
+    public void dadoQueExistenLockersCercanosALasCoordenadasEspecificadasEntoncesBuscarLockersPorCoordenadasDebeRetornarEsosLockers() throws ParametrosDelLockerInvalidos {
+        double latitud = 40.7128;
+        double longitud = -74.0060;
+        double radio = 5.0;
+        List<Locker> lockers = List.of(new Locker(TipoLocker.PEQUENIO, latitud, longitud, "1704"));
 
         when(servicioLocker.obtenerLockersCercanos(latitud, longitud, radio)).thenReturn(lockers);
 
@@ -283,16 +287,14 @@ public class ServicioLockerTest {
         assertEquals(lockers, resultado);
     }
 
+    // Test de búsqueda de Lockers sin parámetros, usando alternativos
     @Test
-    public void buscarLockers_SinParametrosUsaAlternativos() {
-        List<Locker> lockersSeleccionados = Arrays.asList(new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, "1704"));
+    public void dadoQueNoSeProporcionanParametrosEntoncesBuscarLockersDebeRetornarLockersSeleccionados() {
+        List<Locker> lockersSeleccionados = List.of(new Locker(TipoLocker.PEQUENIO, 40.7128, -74.0060, "1704"));
 
         when(servicioLocker.obtenerLockersSeleccionados()).thenReturn(lockersSeleccionados);
 
         List<Locker> resultado = servicioLocker.buscarLockers(null, null, null, null);
         assertEquals(lockersSeleccionados, resultado);
     }
-
-
-
 }

@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
-public class VistaHomeE2E {
+public class vistaHomeE2E {
 
     static Playwright playwright;
     static Browser browser;
@@ -24,10 +24,10 @@ public class VistaHomeE2E {
     @BeforeAll
     static void abrirNavegador() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
-        //browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
+    }
 
-    }   @AfterAll
+    @AfterAll
     static void cerrarNavegador() {
         playwright.close();
     }
@@ -53,7 +53,7 @@ public class VistaHomeE2E {
     @Test
     void deberiaDecirUnlamEnElNavbar() {
         String texto = vistaHome.obtenerTextoDeLaBarraDeNavegacion();
-        assertThat("UNLAM", equalToIgnoringCase(texto));
+        assertThat("Taller Web", equalToIgnoringCase(texto));
     }
 
     @Test
@@ -65,20 +65,20 @@ public class VistaHomeE2E {
     @Test
     void deberiahaberUnBotonDeVolver() {
         String texto = vistaHome.obtenerTextoBotonParaVolver();
-        assertThat("volver", equalToIgnoringCase(texto));
+        assertThat("Volver", equalToIgnoringCase(texto));
     }
 
     @Test
-    void deberiaNavegarAlLoginSiClicEnVolver() {
-        vistaHome.darClickEnVolver();
-        String url = vistaHome.obtenerURLActual();
-        assertThat(url, containsStringIgnoringCase("/lockers/login"));
-    }
-
-    @Test
-    void deberiaNavegarAlBuscadorDeLockersAlClicIrALockers() {
+    void deberiaNavegarALockersSiClicEnIrALockers() {
         vistaHome.darClickEnIrALockers();
         String url = vistaHome.obtenerURLActual();
-        assertThat(url, containsStringIgnoringCase("/lockers/mapa?idUsuario="));
+        assertThat(url, containsStringIgnoringCase("http://localhost:8080/lockers/lockersPorUsuario"));
+    }
+
+    @Test
+    void deberiaNavegarALoginSiClicEnVolver() {
+        vistaHome.darClickEnVolver();
+        String url = vistaHome.obtenerURLActual();
+        assertThat(url, containsStringIgnoringCase("/login"));
     }
 }

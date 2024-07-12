@@ -1,9 +1,9 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.excepcion.ParametrosDelLockerInvalidos;
-import com.tallerwebi.dominio.excepcion.UsuarioNoEncontrado;
 import com.tallerwebi.dominio.locker.Locker;
+import com.tallerwebi.dominio.reserva.Reserva;
 import com.tallerwebi.dominio.usuario.ServicioUsuario;
+import com.tallerwebi.dominio.usuario.excepciones.UsuarioNoEncontrado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class ControladorUsuario {
@@ -23,24 +24,6 @@ public class ControladorUsuario {
         this.servicioUsuario = servicioUsuario;
         this.httpSession = httpSession;
     }
-
-    @GetMapping("/lockersPorUsuario")
-    public ModelAndView buscarLockersPorCodigoPostalUsuario() {
-        ModelAndView mav = new ModelAndView();
-        try {
-            String codigoPostal = (String) httpSession.getAttribute("codigoPostalUsuario");
-            List<Locker> lockers = servicioUsuario.obtenerLockersPorCodigoPostalUsuario(codigoPostal);
-
-            mav.setViewName("lockers-usuario"); // Usar la nueva vista
-            mav.addObject("lockers", lockers);
-            mav.addObject("codigoPostal", codigoPostal);
-        } catch (IllegalArgumentException | UsuarioNoEncontrado | ParametrosDelLockerInvalidos e) {
-            mav.setViewName("error");
-            mav.addObject("mensaje", e.getMessage());
-        }
-        return mav;
-    }
-
 
     @GetMapping("/verLockersRegistrados")
     public ModelAndView verLockersRegistrados() {
@@ -58,4 +41,3 @@ public class ControladorUsuario {
         return mav;
     }
 }
-

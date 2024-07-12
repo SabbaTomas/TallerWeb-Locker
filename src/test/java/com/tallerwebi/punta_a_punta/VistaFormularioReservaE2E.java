@@ -13,8 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
-public class VistaFormularioReservaE2E
-{
+public class VistaFormularioReservaE2E {
     static Playwright playwright;
     static Browser browser;
     BrowserContext context;
@@ -24,13 +23,13 @@ public class VistaFormularioReservaE2E
     @BeforeAll
     static void abrirNavegador() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
-        //browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
+    }
 
-    }   @AfterAll
-static void cerrarNavegador() {
-    playwright.close();
-}
+    @AfterAll
+    static void cerrarNavegador() {
+        playwright.close();
+    }
 
     @BeforeEach
     void crearContextoYPagina() {
@@ -51,21 +50,21 @@ static void cerrarNavegador() {
     }
 
     @Test
-    void DebeHaberUnLabelConFechaInicio(){
+    void DebeHaberUnLabelConFechaInicio() {
         String texto = vistaFormularioReserva.obtenerTextoDeLabelFechaInicio();
         assertThat("Fecha Inicio:", equalToIgnoringCase(texto));
     }
 
     @Test
-    void DebeHaberUnLabelConFechaFin(){
+    void DebeHaberUnLabelConFechaFin() {
         String texto = vistaFormularioReserva.obtenerTextoDeLabelFechaFin();
         assertThat("Fecha Fin:", equalToIgnoringCase(texto));
     }
 
-//    @Test
-//    void clicEnReservaDeberiaLlevarAConfirmacionDeReserva(){
-//        vistaFormularioReserva.darClickEnReserva();
-//        String url = vistaFormularioReserva.obtenerURLActual();
-//        assertThat(url, containsStringIgnoringCase("/lockers/reserva/registrar"));
-//    }
+    @Test
+    void clicEnReservaDeberiaLlevarAConfirmacionDeReserva() {
+        vistaFormularioReserva.darClickEnReserva();
+        String url = vistaFormularioReserva.obtenerURLActual();
+        assertThat(url, containsStringIgnoringCase("http://localhost:8080/lockers/reserva/formulario?idUsuario=1&idLocker=3"));
+    }
 }

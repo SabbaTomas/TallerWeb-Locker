@@ -1,25 +1,23 @@
 package com.tallerwebi.punta_a_punta.vistas;
 
-import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 
-public class VistaFormularioReserva extends VistaWeb{
+public class VistaFormularioReserva extends VistaWeb {
 
     public VistaFormularioReserva(Page page) {
         super(page);
-        page.navigate("localhost:8080/lockers/reserva/formulario?idUsuario=1&idLocker=3");
+        page.navigate("http://localhost:8080/lockers/reserva/formulario?idUsuario=1&idLocker=3");
     }
 
-    public String obtenerTextoDeLabelFechaInicio(){
-        return this.obtenerTextoDelElemento("#inicioLabel");
+    public String obtenerTextoDeLabelFechaInicio() {
+        return this.obtenerTextoDelElemento("label[for='fechaInicio']");
     }
-
 
     public String obtenerTextoDeLabelFechaFin() {
-        return this.obtenerTextoDelElemento("#finLabel");
+        return this.obtenerTextoDelElemento("label[for='fechaFin']");
     }
 
     public void darClickEnReserva() {
-            this.darClickEnElElemento("#btn-reserva");
+        this.darClickEnElElemento("button[type='submit']");
     }
 }

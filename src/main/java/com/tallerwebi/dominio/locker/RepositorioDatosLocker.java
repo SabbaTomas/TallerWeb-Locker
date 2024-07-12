@@ -1,6 +1,8 @@
 package com.tallerwebi.dominio.locker;
 
 
+import com.tallerwebi.dominio.locker.Enum.TipoLocker;
+
 import java.util.List;
 
 public interface RepositorioDatosLocker  {
@@ -17,7 +19,6 @@ public interface RepositorioDatosLocker  {
 
     List<Locker> obtenerSeleccionados();
 
-
     void eliminarTodos();
 
     List<Locker> obtenerLockersPorCodigoPostal(String codigoPostal);
@@ -25,6 +26,5 @@ public interface RepositorioDatosLocker  {
     List<Locker> obtenerLockersPorRangoDeCoordenadas(double v, double v1, double v2, double v3);
 
     List<Locker> encontrarLockersPorCercania(double latitude, double longitude, double maxDistance);
-
 
 }

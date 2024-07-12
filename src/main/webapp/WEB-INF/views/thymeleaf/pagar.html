@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba MP</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <!-- SDK MercadoPago.js -->
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+</head>
+<body class="container mt-5">
+<header class="mb-4">
+    <h1 class="display-4">Pagar Locker</h1>
+</header>
+<main>
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Detalles de la Reserva</h2>
+            <p class="card-text">Id Reserva: <span id="reservaId" th:text="${reservaId}"></span></p>
+            <p class="card-text">Artículo: Locker</p>
+            <p class="card-text">Cantidad: 1</p>
+            <p class="card-text">Precio: <span id="precio" th:text="${mensaje}"></span></p>
+            <button class="btn btn-primary mb-3" onclick="MP()">Comprar</button>
+            <a href="javascript:history.back()" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+</main>
+<footer class="mt-5">
+    <div id="wallet_container"></div>
+</footer>
+<!-- Custom JavaScript -->
+<script th:src="@{/js/mp.js}"></script>
+<!-- Bootstrap JavaScript and dependencies -->
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

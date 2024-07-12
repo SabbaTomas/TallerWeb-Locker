@@ -1,17 +1,17 @@
 package com.tallerwebi.integracion;
 
 import com.tallerwebi.dominio.locker.Locker;
-import com.tallerwebi.dominio.excepcion.ParametrosDelLockerInvalidos;
-import com.tallerwebi.dominio.excepcion.PasswordInvalido;
-import com.tallerwebi.dominio.excepcion.UsuarioNoEncontrado;
+import com.tallerwebi.dominio.locker.excepciones.ParametrosDelLockerInvalidos;
+import com.tallerwebi.dominio.usuario.excepciones.PasswordInvalido;
+import com.tallerwebi.dominio.usuario.excepciones.UsuarioNoEncontrado;
 import com.tallerwebi.dominio.locker.RepositorioDatosLocker;
 import com.tallerwebi.dominio.usuario.RepositorioUsuario;
 import com.tallerwebi.dominio.usuario.ServicioUsuario;
 import com.tallerwebi.dominio.usuario.Usuario;
 import com.tallerwebi.dominio.locker.ServicioLocker;
-import com.tallerwebi.dominio.locker.TipoLocker;
+import com.tallerwebi.dominio.locker.Enum.TipoLocker;
 import com.tallerwebi.dominio.reserva.RepositorioReserva;
-import com.tallerwebi.infraestructura.usuario.ServicioUsuarioImpl;
+import com.tallerwebi.dominio.usuario.ServicioUsuarioImpl;
 import com.tallerwebi.presentacion.ControladorUsuario;
 import com.tallerwebi.util.MD5Util;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,9 +46,8 @@ public class ServicioUsuarioTest {
         controladorUsuarioMock = new ControladorUsuario(servicioUsuario, httpSessionMock);
     }
 
-
     @Test
-    public void queElUsuarioPuedaObtenerLockersPorSuCodigoPostal() throws ParametrosDelLockerInvalidos {
+    public void dadoQueUsuarioPuedaObtenerLockersPorSuCodigoPostal() throws ParametrosDelLockerInvalidos {
         // preparación
         String codigoPostal = "1704";
 
@@ -77,7 +76,7 @@ public class ServicioUsuarioTest {
     }
 
     @Test
-    public void queElUsuarioPuedaVerLosLockersRegistrados() {
+    public void dadoQueUsuarioPuedaVerLosLockersRegistrados() {
         Long usuarioId = 1L;
         Usuario usuarioMock = new Usuario();
         usuarioMock.setId(usuarioId);
@@ -98,7 +97,7 @@ public class ServicioUsuarioTest {
 
 
     @Test
-    public void buscarUsuarioPorIdDeberiaRetornarUsuarioCorrecto() {
+    public void dadoQueBuscarUsuarioPorIdDeberiaRetornarUsuarioCorrecto() {
         // preparación
         Long usuarioId = 1L;
         Usuario usuarioMock = new Usuario();
@@ -112,9 +111,8 @@ public class ServicioUsuarioTest {
         assertEquals(usuarioMock, usuarioEncontrado);
     }
 
-
     @Test
-    public void queSePuedaGuardarUsuarioCorrectamente() {
+    public void dadoQueGuardarUsuarioCorrectamente() {
         // preparación
         Usuario usuario = new Usuario();
         usuario.setEmail("test@unlam.com");
@@ -131,7 +129,7 @@ public class ServicioUsuarioTest {
     }
 
     @Test
-    public void queSePuedaModificarUsuarioCorrectamente() {
+    public void dadoQueModificarUsuarioCorrectamente() {
         // preparación
         Usuario usuarioExistente = new Usuario();
         usuarioExistente.setId(1L);
@@ -156,7 +154,7 @@ public class ServicioUsuarioTest {
     }
 
     @Test
-    public void queSeLanzeExceptionCuandoNoEncuentraUsuarioPorCodigoPostal() {
+    public void dadoQueLanzeExceptionCuandoNoEncuentraUsuarioPorCodigoPostal() {
         // preparación
         String codigoPostalNoExistente = "9999";
 
@@ -169,7 +167,7 @@ public class ServicioUsuarioTest {
     }
 
     @Test
-    public void queSeLanzeExceptionAlActualizarDatosConPasswordInvalido() {
+    public void dadoQueLanzeExceptionAlActualizarDatosConPasswordInvalido() {
         // Preparación
         Usuario usuarioExistente = new Usuario();
         usuarioExistente.setId(1L);
@@ -189,6 +187,4 @@ public class ServicioUsuarioTest {
         });
         verify(repositorioUsuarioMock, never()).modificar(usuarioActualizado);
     }
-
 }
-

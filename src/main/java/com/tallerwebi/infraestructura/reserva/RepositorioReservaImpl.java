@@ -1,27 +1,25 @@
 package com.tallerwebi.infraestructura.reserva;
 
-import com.tallerwebi.dominio.locker.Locker;
 import com.tallerwebi.dominio.reserva.RepositorioReserva;
 import com.tallerwebi.dominio.reserva.Reserva;
 import com.tallerwebi.dominio.usuario.Usuario;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-@Transactional
 public class RepositorioReservaImpl implements RepositorioReserva {
 
     private final SessionFactory sessionFactory;
 
-    public void setSession(Session session) {
-    }
+    @Autowired
     public RepositorioReservaImpl(SessionFactory sessionFactory) {
+
         this.sessionFactory = sessionFactory;
     }
 
@@ -63,6 +61,13 @@ public class RepositorioReservaImpl implements RepositorioReserva {
         return session.get(Reserva.class, id);
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Reserva> findAll() {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM Reserva").list();
+    }
+
     @Override
     public void actualizarReserva(Reserva reserva) {
         sessionFactory.getCurrentSession().update(reserva);
@@ -78,7 +83,6 @@ public class RepositorioReservaImpl implements RepositorioReserva {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean tieneReservaActiva(Long idUsuario, Long idLocker) {
         Session session = sessionFactory.getCurrentSession();
         Query<Long> query = session.createQuery(
@@ -93,13 +97,54 @@ public class RepositorioReservaImpl implements RepositorioReserva {
         return count != null && count > 0;
     }
 
-    @SuppressWarnings("unchecked")
+
     @Override
-    @Transactional(readOnly = true)
-    public List<Locker> obtenerLockersPorIdUsuario(Long idUsuario) {
+    public List obtenerLockersPorIdUsuario(Long idUsuario) {
         Session session = sessionFactory.getCurrentSession();
         return session.createQuery("SELECT r.locker FROM Reserva r WHERE r.usuario.id = :idUsuario")
                 .setParameter("idUsuario", idUsuario)
                 .list();
     }
+
+    @Override
+    public List<Reserva> obtenerReservasPorUsuario(Long idUsuario) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM Reserva WHERE usuario.id = :idUsuario", Reserva.class)
+                .setParameter("idUsuario", idUsuario)
+                .list();
+    }
+
+    @Override
+    public List<Reserva> obtenerReservasConPosiblePenalizacion() {
+        Session session = sessionFactory.getCurrentSession();
+        LocalDate fechaActual = LocalDate.now();
+        return session.createQuery("FROM Reserva r WHERE r.fechaFinalizacion < :fechaActual OR r.fechaReserva < :fechaActual", Reserva.class)
+                .setParameter("fechaActual", fechaActual)
+                .list();
+    }
+
+    @Override
+    public List<Reserva> obtenerTodasLasReservas() {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("FROM Reserva", Reserva.class).list();
+    }
+
+
+    @Override
+    public void actualizarEstadoReserva(Long idReserva, String estado) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "UPDATE Reserva SET estado = :estado WHERE id = :idReserva";
+        Query query = session.createQuery(hql);
+        query.setParameter("estado", estado);
+        query.setParameter("idReserva", idReserva);
+        query.executeUpdate();
+
+        if (estado.equals("APROBADO")) {
+            String deleteHql = "DELETE FROM Penalizacion WHERE reserva.id = :idReserva";
+            Query deleteQuery = session.createQuery(deleteHql);
+            deleteQuery.setParameter("idReserva", idReserva);
+            deleteQuery.executeUpdate();
+        }
+    }
+
 }

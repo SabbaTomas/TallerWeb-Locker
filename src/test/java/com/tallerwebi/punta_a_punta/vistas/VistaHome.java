@@ -6,7 +6,7 @@ public class VistaHome extends VistaWeb{
 
     public VistaHome(Page page) {
         super(page);
-        page.navigate("localhost:8080/lockers/home");
+        page.navigate("http://localhost:8080/lockers/home");
     }
 
     public String obtenerTextoDeLaBarraDeNavegacion(){
@@ -14,7 +14,11 @@ public class VistaHome extends VistaWeb{
     }
 
     public String obtenerTextoBotonIrALockers(){
-        return this.obtenerTextoDelElemento("a.btn-primary");
+        return this.obtenerTextoDelElemento("a.btn-primary:nth-of-type(2)");
+    }
+
+    public String obtenerTextoBotonParaVolver() {
+        return this.obtenerTextoDelElemento("a.btn-secondary");
     }
 
     public void darClickEnVolver() {
@@ -22,10 +26,6 @@ public class VistaHome extends VistaWeb{
     }
 
     public void darClickEnIrALockers() {
-        this.darClickEnElElemento("a.btn-primary");
-    }
-
-    public String obtenerTextoBotonParaVolver() {
-        return this.obtenerTextoDelElemento("a.btn-secondary");
+        this.darClickEnElElemento("a.btn-primary:nth-of-type(2)");
     }
 }

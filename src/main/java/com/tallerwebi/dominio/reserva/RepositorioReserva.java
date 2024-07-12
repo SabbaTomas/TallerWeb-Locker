@@ -6,7 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface RepositorioReserva {
+@Transactional
+public interface RepositorioReserva  {
 
     Usuario buscarLockerPorUsuario(String email, String password);
     void guardarUsuario(Usuario usuario);
@@ -16,15 +17,23 @@ public interface RepositorioReserva {
 
     Reserva obtenerReservaPorId(Long id);
 
+    @SuppressWarnings("unchecked")
+    List<Reserva> findAll();
+
     void actualizarReserva(Reserva reserva);
 
     void eliminarReserva(Long id);
 
-    @Transactional
     boolean tieneReservaActiva(Long idUsuario, Long idLocker);
 
-    @SuppressWarnings("unchecked")
-    @Transactional(readOnly = true)
     List<Locker> obtenerLockersPorIdUsuario(Long idUsuario);
+
+    List<Reserva> obtenerReservasPorUsuario(Long idUsuario);
+
+    List<Reserva> obtenerReservasConPosiblePenalizacion();
+
+    List<Reserva> obtenerTodasLasReservas();
+
+    void actualizarEstadoReserva(Long idReserva, String estado);
 }
 

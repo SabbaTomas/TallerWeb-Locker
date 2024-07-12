@@ -1,11 +1,11 @@
 package com.tallerwebi.presentacion;
 
-import com.tallerwebi.dominio.excepcion.PasswordInvalido;
+import com.tallerwebi.dominio.usuario.excepciones.PasswordInvalido;
 import com.tallerwebi.dominio.usuario.DatosLogin;
 import com.tallerwebi.util.MD5Util;
 import com.tallerwebi.dominio.usuario.ServicioLogin;
 import com.tallerwebi.dominio.usuario.Usuario;
-import com.tallerwebi.dominio.excepcion.UsuarioExistente;
+import com.tallerwebi.dominio.usuario.excepciones.UsuarioExistente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -35,10 +35,9 @@ public class ControladorLogin {
     public ModelAndView validarLogin(@ModelAttribute("datosLogin") DatosLogin datosLogin, HttpServletRequest request) {
         ModelMap model = new ModelMap();
 
-        // Encriptar password
         String hashedPassword = MD5Util.hash(datosLogin.getPassword());
-
         Usuario usuarioBuscado = servicioLogin.consultarUsuario(datosLogin.getEmail(), hashedPassword);
+
         if (usuarioBuscado != null) {
             request.getSession().setAttribute("USUARIO_ID", usuarioBuscado.getId());
             request.getSession().setAttribute("ROL", usuarioBuscado.getRol());

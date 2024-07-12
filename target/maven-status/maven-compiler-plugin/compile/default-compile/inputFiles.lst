@@ -1,38 +1,49 @@
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\config\SpringWebConfig.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\excepcion\PasswordInvalido.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\excepcion\ReservaActivaExistenteException.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\locker\Locker.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\locker\RepositorioDatosLocker.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\infraestructura\locker\RepositorioDatosLockerImpl.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\reserva\RepositorioReserva.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\excepcion\UsuarioNoEncontrado.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\locker\ServicioGeocodificacion.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\infraestructura\usuario\ServicioUsuarioImpl.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\usuario\ServicioLogin.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\excepcion\UsuarioNoEncontradoException.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\excepcion\ParametrosDelLockerInvalidos.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\util\MD5Util.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\locker\ServicioLocker.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\usuario\DatosLogin.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\reserva\Reserva.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\usuario\Usuario.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\excepcion\UsuarioExistente.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\infraestructura\usuario\RepositorioUsuarioImpl.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\presentacion\ControladorLogin.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\config\HibernateConfig.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\config\DatabaseInitializationConfig.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\presentacion\ControladorReserva.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\reserva\ServicioReserva.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\usuario\RepositorioUsuario.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\infraestructura\usuario\ServicioLoginImpl.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\infraestructura\reserva\RepositorioReservaImpl.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\presentacion\ControladorUsuario.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\excepcion\LockerNoEncontrado.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\presentacion\ControladorLocker.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\infraestructura\locker\ServicioLockerImpl.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\MyServletInitializer.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\util\Haversine.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\infraestructura\reserva\ServicioReservaImpl.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\locker\TipoLocker.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\dominio\usuario\ServicioUsuario.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\main\java\com\tallerwebi\presentacion\ControladorMostrarJson.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\penalizacion\Penalizacion.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\presentacion\ControladorMostrarJson.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\locker\Locker.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\locker\ServicioLocker.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\presentacion\ControladorLogin.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\reserva\RepositorioReserva.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\ServicioPago.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\locker\excepciones\ParametrosDelLockerInvalidos.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\presentacion\ControladorReserva.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\DatosLogin.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\infraestructura\locker\RepositorioDatosLockerImpl.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\penalizacion\PenalizacionServicioImpl.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\presentacion\UserBuyer.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\ServicioLoginImpl.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\reserva\ServicioReservaImpl.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\excepciones\PasswordInvalido.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\presentacion\ControladorUsuario.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\locker\RepositorioDatosLocker.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\ServicioPagoImpl.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\ServicioUsuarioImpl.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\presentacion\ControladorLocker.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\reserva\Reserva.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\config\HibernateConfig.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\presentacion\ControladorPago.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\locker\ServicioLockerImpl.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\infraestructura\reserva\RepositorioReservaImpl.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\excepciones\UsuarioNoEncontradoException.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\infraestructura\penalizacion\RepositorioPenalizacionImpl.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\penalizacion\RepositorioPenalizacion.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\util\Haversine.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\locker\Enum\TipoLocker.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\reserva\excepciones\ReservaActivaExistenteException.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\excepciones\UsuarioExistente.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\locker\excepciones\LockerNoEncontrado.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\reserva\excepciones\ReservaNoEncontradaException.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\config\DatabaseInitializationConfig.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\presentacion\ControladorPenalizacionesPorUsuario.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\penalizacion\PenalizacionService.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\ServicioLogin.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\MyServletInitializer.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\ServicioUsuario.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\reserva\ServicioReserva.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\util\MD5Util.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\RepositorioUsuario.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\config\SpringWebConfig.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\locker\ServicioGeocodificacion.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\excepciones\UsuarioNoEncontrado.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\dominio\usuario\Usuario.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\main\java\com\tallerwebi\infraestructura\usuario\RepositorioUsuarioImpl.java

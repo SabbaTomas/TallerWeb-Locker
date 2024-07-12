@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Resultado del Pago</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+
+    <!-- Custom style -->
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="home">Volver al HOME</a>
+    </div>
+</nav>
+
+<main role="main" class="container mt-5">
+    <div class="row justify-content-center">
+        <div id="loginbox" class="col-md-6 col-sm-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Resultado del Pago</h3>
+                    <hr class="colorgraph">
+                    <p th:if="${message != null}" class="alert alert-success" th:text="${message}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Bootstrap core JS -->
+<script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

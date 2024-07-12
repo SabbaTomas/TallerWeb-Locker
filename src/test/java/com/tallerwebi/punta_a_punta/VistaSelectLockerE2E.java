@@ -1,7 +1,6 @@
 package com.tallerwebi.punta_a_punta;
 
 import com.microsoft.playwright.*;
-import com.tallerwebi.punta_a_punta.vistas.VistaHome;
 import com.tallerwebi.punta_a_punta.vistas.VistaLogin;
 import com.tallerwebi.punta_a_punta.vistas.VistaSelectLocker;
 import org.junit.jupiter.api.AfterAll;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
@@ -25,17 +23,17 @@ public class VistaSelectLockerE2E {
     @BeforeAll
     static void abrirNavegador() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
-        //browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+    }
 
-    }   @AfterAll
+    @AfterAll
     static void cerrarNavegador() {
         playwright.close();
     }
 
     @BeforeEach
     void crearContextoYPagina() {
-        context = browser.newContext();
+        context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 1024));
         Page page = context.newPage();
 
         vistaLogin = new VistaLogin(page);
@@ -53,29 +51,18 @@ public class VistaSelectLockerE2E {
 
     @Test
     void deberiaDecirSelectALockerEnElTitulo() {
-//        String currentUrl = vistaSelectLocker.obtenerURLActual();
-//        assertThat(currentUrl, containsStringIgnoringCase("/lockers/mapa?idUsuario="));
-
+        vistaSelectLocker.esperarElemento("h1");
         String texto = vistaSelectLocker.obtenerTextoDeLaBarraDeNavegacion();
         assertThat("SELECT A LOCKER", equalToIgnoringCase(texto));
     }
 
     @Test
-    void AlClicEnBuscarDeberiaMostrarElMapa() {
+    void alClicEnBuscarDeberiaMostrarElMapa() {
+        vistaSelectLocker.ingresarCodigoPostal("1000");
+        vistaSelectLocker.esperarElemento("#filterForm button[type='submit']");
         vistaSelectLocker.clicEnBuscarLockers();
-
+        vistaSelectLocker.esperarElemento("#map");
         Locator elemento = vistaSelectLocker.obtenerElementoDeLaPagina();
         assertThat(elemento.isVisible(), equalTo(true));
     }
-
-//    @Test
-//    void alHacerClicenReservarDeberiaLlevarAlFormularioDeReserva(){
-//        vistaSelectLocker.clicEnBuscarLockers();
-//        vistaSelectLocker.clicEnIconoReservar();
-//        vistaSelectLocker.clicEnReservar();
-//
-//        String url = vistaSelectLocker.obtenerURLActual();
-//        assertThat(url, containsStringIgnoringCase("ockers/formulario?idUsuario=1&idLocker=3"));
-//    }
-
 }

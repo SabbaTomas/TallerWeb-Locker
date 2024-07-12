@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+
 public class VistaLoginE2E {
 
     static Playwright playwright;
@@ -21,9 +22,7 @@ public class VistaLoginE2E {
     @BeforeAll
     static void abrirNavegador() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch();
-        //browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
-
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(50));
     }
 
     @AfterAll
@@ -33,7 +32,7 @@ public class VistaLoginE2E {
 
     @BeforeEach
     void crearContextoYPagina() {
-        context = browser.newContext();
+        context = browser.newContext(new Browser.NewContextOptions().setViewportSize(1280, 1024));
         Page page = context.newPage();
         vistaLogin = new VistaLogin(page);
     }
@@ -64,13 +63,13 @@ public class VistaLoginE2E {
         vistaLogin.escribirClave("prueba1234");
         vistaLogin.darClickEnIniciarSesion();
         String url = vistaLogin.obtenerURLActual();
-        assertThat(url, containsStringIgnoringCase("/lockers/home"));
+        assertThat(url, containsStringIgnoringCase("/home"));
     }
 
     @Test
     void deberiaNavegarAlRegistrarAlClicEnRegistrarme() {
         vistaLogin.darClickEnRegistrarme();
         String url = vistaLogin.obtenerURLActual();
-        assertThat(url, containsStringIgnoringCase("/lockers/nuevo-usuario"));
+        assertThat(url, containsStringIgnoringCase("/nuevo-usuario"));
     }
 }

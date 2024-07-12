@@ -1,9 +1,10 @@
 package com.tallerwebi.infraestructura;
 
-import com.tallerwebi.infraestructura.reserva.RepositorioReservaImpl;
-import com.tallerwebi.dominio.usuario.Usuario;
+import com.tallerwebi.dominio.locker.Locker;
 import com.tallerwebi.dominio.reserva.Reserva;
+import com.tallerwebi.dominio.usuario.Usuario;
 import com.tallerwebi.infraestructura.config.HibernateTestInfraestructuraConfig;
+import com.tallerwebi.infraestructura.reserva.RepositorioReservaImpl;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -19,13 +20,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+@Transactional
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {HibernateTestInfraestructuraConfig.class})
 public class RepositorioReservaTest {
@@ -36,22 +38,19 @@ public class RepositorioReservaTest {
     @Mock
     private Session session;
 
-
     @InjectMocks
     private RepositorioReservaImpl repoReserva;
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(sessionFactory.getCurrentSession()).thenReturn(session);
-        repoReserva.setSession(session);
     }
 
     @Test
     @Rollback
-    @Transactional
-    public void testBuscarLockerPorUsuario() {
-        // Given
+    public void dadoQueSeBuscaLockerPorUsuarioSeObtieneElUsuario() {
+        // Preparación
         String email = "test@example.com";
         String password = "password";
         Usuario usuario = new Usuario();
@@ -62,10 +61,10 @@ public class RepositorioReservaTest {
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.uniqueResult()).thenReturn(usuario);
 
-        // When
+        // Ejecución
         Usuario foundUsuario = repoReserva.buscarLockerPorUsuario(email, password);
 
-        // Then
+        // Verificación
         assertNotNull(foundUsuario);
         assertEquals(email, foundUsuario.getEmail());
         verify(session).createQuery(anyString());
@@ -75,23 +74,21 @@ public class RepositorioReservaTest {
 
     @Test
     @Rollback
-    @Transactional
-    public void testGuardarUsuario() {
-        // Given
+    public void dadoQueSeGuardaUsuarioSeVerificaGuardado() {
+        // Preparación
         Usuario usuario = new Usuario();
 
-        // When
+        // Ejecución
         repoReserva.guardarUsuario(usuario);
 
-        // Then
+        // Verificación
         verify(session).save(usuario);
     }
 
     @Test
     @Rollback
-    @Transactional
-    public void testBuscarLockerUsuarioNoExiste() {
-        // Given
+    public void dadoQueSeBuscaLockerPorUsuarioNoExistenteSeObtieneNull() {
+        // Preparación
         String email = "noexistente@example.com";
         String password = "nopassword";
         Query query = mock(Query.class);
@@ -99,18 +96,17 @@ public class RepositorioReservaTest {
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.uniqueResult()).thenReturn(null);
 
-        // When
+        // Ejecución
         Usuario foundUsuario = repoReserva.buscarLockerPorUsuario(email, password);
 
-        // Then
+        // Verificación
         assertNull(foundUsuario);
     }
 
     @Test
     @Rollback
-    @Transactional
-    public void testBuscarUsuario() {
-        // Given
+    public void dadoQueSeBuscaUsuarioSeObtieneElUsuario() {
+        // Preparación
         String email = "existing@example.com";
         Usuario usuario = new Usuario();
         usuario.setEmail(email);
@@ -119,69 +115,65 @@ public class RepositorioReservaTest {
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.uniqueResult()).thenReturn(usuario);
 
-        // When
+        // Ejecución
         Usuario foundUsuario = repoReserva.buscar(email);
 
-        // Then
+        // Verificación
         assertNotNull(foundUsuario);
         assertEquals(email, foundUsuario.getEmail());
     }
 
     @Test
     @Rollback
-    @Transactional
-    public void testBuscarUsuarioNoExiste() {
-        // Given
+    public void dadoQueSeBuscaUsuarioNoExistenteSeObtieneNull() {
+        // Preparación
         String email = "noexistente@example.com";
         Query query = mock(Query.class);
         when(session.createQuery(anyString())).thenReturn(query);
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.uniqueResult()).thenReturn(null);
 
-        // When
+        // Ejecución
         Usuario foundUsuario = repoReserva.buscar(email);
 
-        // Then
+        // Verificación
         assertNull(foundUsuario);
     }
 
     @Test
     @Rollback
-    @Transactional
-    public void testModificarUsuarioExistente() {
-        // Given
+    public void dadoQueSeModificaUsuarioExistenteSeVerificaModificacion() {
+        // Preparación
         Usuario usuario = new Usuario();
         usuario.setEmail("existing@example.com");
         usuario.setPassword("existingpassword");
 
-        // When
+        // Ejecución
         repoReserva.modificar(usuario);
 
-        // Then
+        // Verificación
         verify(session).update(usuario);
     }
 
     @Test
-    @Transactional
     @Rollback
-    public void testGuardarReserva() {
-        // Given
+    public void dadoQueSeGuardaReservaSeVerificaGuardado() {
+        // Preparación
         Reserva reserva = new Reserva();
         reserva.setFechaReserva(LocalDate.of(2024, 6, 1));
         reserva.setFechaFinalizacion(LocalDate.of(2024, 6, 10));
 
-        // When
+        // Ejecución
         repoReserva.guardarReserva(reserva);
 
-        // Then
+        // Verificación
         verify(session).save(reserva);
     }
 
     @Test
-    @Transactional
     @Rollback
-    public void testObtenerReservaPorId() {
-        // Given
+    public void dadoQueSeObtieneReservaPorIdSeObtieneReservaCorrecta() {
+        // Preparación
         Long id = 1L;
         Reserva reserva = new Reserva();
         reserva.setId(id);
@@ -191,10 +183,10 @@ public class RepositorioReservaTest {
 
         when(session.get(Reserva.class, id)).thenReturn(reserva);
 
-        // When
+        // Ejecución
         Reserva result = repoReserva.obtenerReservaPorId(id);
 
-        // Then
+        // Verificación
         assertNotNull(result);
         assertEquals(reserva.getId(), result.getId());
         assertEquals(reserva.getFechaReserva(), result.getFechaReserva());
@@ -203,63 +195,80 @@ public class RepositorioReservaTest {
     }
 
     @Test
-    @Transactional
     @Rollback
-    public void testActualizarReserva() {
-        // Given
+    public void dadoQueSeActualizaReservaSeVerificaActualizacion() {
+        // Preparación
         Reserva reserva = new Reserva();
         reserva.setId(1L);
         reserva.setFechaReserva(LocalDate.of(2024, 6, 1));
         reserva.setFechaFinalizacion(LocalDate.of(2024, 6, 10));
 
-        // When
+        // Ejecución
         repoReserva.actualizarReserva(reserva);
 
-        // Then
+        // Verificación
         verify(session).update(reserva);
     }
 
     @Test
-    @Transactional
     @Rollback
-    public void testEliminarReserva() {
-        // Given
+    public void dadoQueSeEliminaReservaSeVerificaEliminacion() {
+        // Preparación
         Long id = 1L;
         Reserva reserva = new Reserva();
         reserva.setId(id);
 
         when(session.load(Reserva.class, id)).thenReturn(reserva);
 
-        // When
+        // Ejecución
         repoReserva.eliminarReserva(id);
 
-        // Then
+        // Verificación
         verify(session).delete(reserva);
     }
 
     @Test
-    @Transactional
     @Rollback
-    public void testTieneReservaActiva() {
-        // Given
+    public void dadoQueTieneReservaActivaSeVerificaEstadoActivo() {
+        // Preparación
         Long idLocker = 1L;
         Long idUsuario = 1L;
         LocalDate now = LocalDate.now();
         String hql = "SELECT COUNT(*) FROM Reserva WHERE usuario.id = :idUsuario AND locker.id = :idLocker AND fechaFinalizacion > :hoy";
 
-        Query<Long> query = mock(Query.class); // Mock del Query
+        Query<Long> query = mock(Query.class);
         when(session.createQuery(hql, Long.class)).thenReturn(query);
         when(query.setParameter("idUsuario", idUsuario)).thenReturn(query);
         when(query.setParameter("idLocker", idLocker)).thenReturn(query);
         when(query.setParameter("hoy", now)).thenReturn(query);
         when(query.uniqueResult()).thenReturn(1L);
 
-        // When
+        // Ejecución
         boolean tieneReserva = repoReserva.tieneReservaActiva(idUsuario, idLocker);
 
-        // Then
+        // Verificación
         assertTrue(tieneReserva);
     }
 
+    @Test
+    @Rollback
+    public void dadoQueSeObtienenLockersPorIdUsuarioSeObtieneListaLockers() {
+        // Preparación
+        Long idUsuario = 1L;
+        Locker locker = new Locker();
+        Query<Locker> query = mock(Query.class);
+        when(session.createQuery(anyString())).thenReturn(query);
+        when(query.setParameter(anyString(), any())).thenReturn(query);
+        when(query.list()).thenReturn(List.of(locker));
 
+        // Ejecución
+        List<Locker> lockers = repoReserva.obtenerLockersPorIdUsuario(idUsuario);
+
+        // Verificación
+        assertNotNull(lockers);
+        assertEquals(1, lockers.size());
+        verify(session).createQuery(anyString());
+        verify(query).setParameter(anyString(), any());
+        verify(query).list();
+    }
 }

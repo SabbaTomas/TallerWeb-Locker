@@ -1,64 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Todos los Lockers</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Taller Web I</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
-<div class="container">
-    <h1>Todos los Lockers Registrados</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Ubicación</th>
-            <th>Estado</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="locker : ${lockers}">
-            <td th:text="${locker.id}"></td>
-            <td th:text="${locker.ubicacion}"></td>
-            <td th:text="${locker.estado}"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">UNLAM</a>
+</nav>
+<main role="main" class="container">
+    <div class="d-flex flex-column align-items-center justify-content-center vh-100">
+        <h1 class="mb-4">Todos los Lockers Registrados</h1>
+        <ul>
+            <li th:each="locker : ${lockers}" th:text="${locker.descripcion}">Locker Descripción</li>
+        </ul>
+        <a th:href="@{/login}" class="btn btn-lg btn-secondary">Volver</a>
+    </div>
+</main>
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>

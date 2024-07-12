@@ -54,6 +54,9 @@
     <a th:href="@{/mostrarJson(jsonReserva=${jsonReserva})}">Ver JSON de la Reserva</a>
 </p>
 <a th:href="@{/mapa(idUsuario=${usuarioId})}">Volver al mapa</a>
-<a th:href="@{/pago/mp(jsonReserva=${jsonReserva})}">Proceder al Pago</a>
+
+<p th:if="${costoTotal != null}">
+    <a th:href="@{/pagar(reservaId=${reservaId}, costoTotal=${costoTotal}, penalizacion=0)}">Proceder al Pago</a>
+</p>
 </body>
 </html>

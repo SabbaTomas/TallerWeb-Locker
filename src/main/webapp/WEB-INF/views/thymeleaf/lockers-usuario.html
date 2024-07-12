@@ -3,53 +3,78 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <title>Lockers del Usuario</title>
-
-    <!-- Bootstrap core css -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
-
-    <!-- custom style -->
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
-
+    <style>
+        .btn-custom {
+            width: 100%;
+            margin-top: 10px;
+        }
+        .locker-item {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
-
 <body>
-
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">UNLAM</a>
+    <a class="navbar-brand" href="#">Taller Web I</a>
 </nav>
-
-<main role="main" class="container">
-    <div class="d-flex flex-column align-items-center justify-content-center vh-100">
-        <h1 class="mb-4">Lockers del Usuario</h1>
-        <div th:if="${#lists.isEmpty(lockers)}">
-            <p>No se encontraron lockers para este usuario.</p>
+<main role="main" class="container mt-5">
+    <div class="row vh-100">
+        <div class="col-md-4 d-flex flex-column align-items-center bg-light p-3">
+            <h2>Lockers Reservados</h2>
+            <ul id="lockers-list" class="list-group w-100">
+                <li th:each="locker : ${lockers}" class="list-group-item locker-item" data-locker-id="${locker.id}">
+                    <span th:text="${locker.descripcion}">Locker Descripción</span>
+                    <ul class="list-group mt-2">
+                        <li th:each="reserva : ${reservas}" th:if="${reserva.locker.id == locker.id}" class="list-group-item">
+                            <span th:text="'ID Reserva: ' + ${reserva.id}"></span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-        <div th:if="${!#lists.isEmpty(lockers)}">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Ubicación</th>
-                    <th>Código Postal</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="locker : ${lockers}">
-                    <td th:text="${locker.id}"></td>
-                    <td th:text="${locker.ubicacion}"></td>
-                    <td th:text="${locker.codigoPostal}"></td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="col-md-5 d-flex flex-column align-items-center bg-secondary text-white p-3">
+            <h2>Estado de los Lockers</h2>
+            <ul class="list-group w-100">
+                <li th:each="reserva : ${reservas}" th:classappend="${reserva.estado == 'pendiente'} ? 'bg-warning text-dark' : (${reserva.estado == 'penalizado'} ? 'bg-danger text-white' : 'bg-success text-white')" th:text="'ID Reserva: ' + ${reserva.id} + ' - Fecha Reserva: ' + ${reserva.fechaReserva} + ' - Fecha Finalización: ' + ${reserva.fechaFinalizacion} + ' - Estado: ' + ${reserva.estado} + ' - Monto Base: ' + ${reserva.costo}" class="list-group-item"></li>
+            </ul>
         </div>
-        <a th:href="@{/login}" class="btn btn-lg btn-secondary">Volver</a>
+        <div class="col-md-3 d-flex flex-column align-items-center bg-light p-3">
+            <h2>Pendientes / Penalizados</h2>
+            <form th:action="@{/pagarPenalizaciones}" method="get" id="penalizacionesForm">
+                <ul class="list-group w-100">
+                    <li th:each="reserva : ${reservas}" th:if="${reserva.estado == 'pendiente' || reserva.estado == 'penalizado'}" class="list-group-item">
+                        <label th:for="'reserva-' + ${reserva.id}">
+                            <input type="radio" th:id="'reserva-' + ${reserva.id}" th:name="reservaSeleccionada" th:value="${reserva.id}" th:data-monto="${reserva.costo}"/>
+                            <span th:text="'ID Reserva: ' + ${reserva.id} + ' - Estado: ' + ${reserva.estado}"></span>
+                        </label>
+                    </li>
+                </ul>
+                <input type="hidden" id="montoTotal" name="montoTotal"/>
+                <button type="submit" class="btn btn-lg btn-primary btn-custom">Pagar</button>
+            </form>
+            <a th:href="@{/home}" class="btn btn-lg btn-secondary btn-custom">Volver</a>
+        </div>
     </div>
 </main>
-<!-- /.container -->
+<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.bundle.min.js}"></script>
+<script>
+    document.querySelectorAll('input[name="reservaSeleccionada"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            const selectedMonto = this.getAttribute('data-monto');
+            document.getElementById('montoTotal').value = selectedMonto;
+        });
+    });
 
-<!-- Bootstrap core js -->
-<script type="text/javascript" th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.min.js}"></script>
+    document.getElementById('penalizacionesForm').addEventListener('submit', function(event) {
+        const selectedReserva = document.querySelector('input[name="reservaSeleccionada"]:checked');
+        if (!selectedReserva) {
+            alert('Por favor, seleccione una reserva antes de proceder con el pago.');
+            event.preventDefault();
+        }
+    });
+</script>
 </body>
 </html>

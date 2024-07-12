@@ -1,16 +1,28 @@
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\punta_a_punta\VistaLoginE2E.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\punta_a_punta\vistas\VistaLogin.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\integracion\config\SpringWebTestConfig.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\infraestructura\RepositorioLockerTest.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\integracion\ServicioReservaTest.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\integracion\ServicioUsuarioTest.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\punta_a_punta\vistas\VistaWeb.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\infraestructura\RepositorioReservaTest.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\presentacion\ControladorReservaTest.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\presentacion\ControladorLockerTest.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\integracion\ServicioLockerTest.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\integracion\config\HibernateTestConfig.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\infraestructura\RepositorioUsuarioTest.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\presentacion\ControladorUsuarioTest.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\infraestructura\config\HibernateTestInfraestructuraConfig.java
-D:\eclipse-jee-2023-03-R-win32-x86_64\tallerwebi-base\src\test\java\com\tallerwebi\presentacion\ControladorLoginTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\punta_a_punta\vistas\VistaSelectLocker.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\integracion\ServicioLockerTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\punta_a_punta\VistaLoginE2E.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\infraestructura\RepositorioPenalizacionTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\integracion\ServicioUsuarioTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\integracion\ServicioPenalizacionTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\presentacion\ControladorPenalizacionesPorUsuarioTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\infraestructura\RepositorioReservaTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\punta_a_punta\vistas\VistaHome.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\punta_a_punta\vistas\VistaLogin.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\presentacion\ControladorLoginTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\presentacion\ControladorPagoTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\presentacion\ControladorReservaTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\punta_a_punta\VistaSelectLockerE2E.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\integracion\config\HibernateTestConfig.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\integracion\PenalizacionServicioImplTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\punta_a_punta\vistaHomeE2E.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\integracion\ServicioPagoImplTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\infraestructura\RepositorioLockerTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\presentacion\ControladorUsuarioTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\punta_a_punta\VistaFormularioReservaE2E.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\infraestructura\RepositorioUsuarioTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\integracion\ServicioReservaTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\presentacion\ControladorLockerTest.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\punta_a_punta\vistas\VistaFormularioReserva.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\punta_a_punta\vistas\VistaWeb.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\integracion\config\SpringWebTestConfig.java
+C:\Users\Alberto\Desktop\Nul pointer\Version final\TallerWeb-Locker-Maxi\src\test\java\com\tallerwebi\infraestructura\config\HibernateTestInfraestructuraConfig.java

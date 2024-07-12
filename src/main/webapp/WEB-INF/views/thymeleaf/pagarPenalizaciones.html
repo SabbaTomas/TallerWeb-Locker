@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagar Penalizaciones</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.0/css/bootstrap.min.css}"/>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+</head>
+<body class="container mt-5">
+<header class="mb-4">
+    <h1 class="display-4">Pagar Penalizaciones</h1>
+</header>
+
+<main>
+    <div class="card">
+        <div class="card-body">
+            <p>Reserva ID: <span id="reservaId" th:text="${reservaId}"></span></p>
+            <p>Monto Total: <span id="precio" th:text="${montoTotal}"></span></p>
+            <p>Cantidad de Penalizaciones: <span th:text="${cantidadPenalizaciones}"></span></p>
+            <div th:if="${penalizaciones != null}">
+                <h3>Lista de Penalizaciones:</h3>
+                <ul>
+                    <li th:each="penalizacion : ${penalizaciones}">
+                        <span th:text="'ID: ' + ${penalizacion.id} + ', Monto: ' + ${penalizacion.monto} + ', Descripción: ' + ${penalizacion.descripcion}"></span>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-primary mb-3" onclick="MP()">Pagar</button>
+            <a href="javascript:history.back()" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+</main>
+
+<footer class="mt-5">
+    <div id="wallet_container"></div>
+</footer>
+
+<script th:src="@{/js/mp.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.2.0/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

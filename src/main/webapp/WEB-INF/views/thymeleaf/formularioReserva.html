@@ -61,15 +61,15 @@
     <input type="hidden" th:field="*{usuario.email}" />
     <input type="hidden" th:field="*{usuario.password}" />
 
-    <label for="fechaInicio">Fecha Inicio:</label>
+    <label for="fechaInicio" id="inicioLabel">Fecha Inicio:</label>
     <input type="date" id="fechaInicio" th:field="*{fechaReserva}" required>
 
-    <label for="fechaFin">Fecha Fin:</label>
+    <label for="fechaFin" id="finLabel">Fecha Fin:</label>
     <input type="date" id="fechaFin" th:field="*{fechaFinalizacion}" required>
 
     <input type="hidden" th:field="*{locker.id}" />
 
-    <button type="submit">Reservar</button>
+    <button type="submit" id="btn-reserva">Reservar</button>
 </form>
 </body>
 </html>

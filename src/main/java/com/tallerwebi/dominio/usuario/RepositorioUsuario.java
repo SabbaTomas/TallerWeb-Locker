@@ -1,7 +1,9 @@
 package com.tallerwebi.dominio.usuario;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 public interface RepositorioUsuario {
 
     Usuario buscarUsuario(String email, String password);

@@ -1,6 +1,7 @@
 package com.tallerwebi.integracion.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,8 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({"presentacion", "dominio", "infraestructura"})
+@ComponentScan({"com.tallerwebi.presentacion", "com.tallerwebi.dominio", "com.tallerwebi.infraestructura", })
+
 public class SpringWebTestConfig implements WebMvcConfigurer {
 
     // Spring + Thymeleaf need this
@@ -76,5 +78,6 @@ public class SpringWebTestConfig implements WebMvcConfigurer {
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
+
 
 }

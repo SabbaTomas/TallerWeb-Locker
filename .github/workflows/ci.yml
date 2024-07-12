@@ -1,6 +1,10 @@
 name: Java CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -18,7 +22,19 @@ jobs:
 
     - name: Build with Maven
       run: mvn clean install
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Run tests
       run: mvn test
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Print Java version
+      run: java -version
+
+    - name: Print Maven version
+      run: mvn -version
+
+    - name: List project files
+      run: ls -R
